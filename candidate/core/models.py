@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
+
 # Extends the user model to handle both user types
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -8,6 +10,12 @@ class User(AbstractUser):
         ('recruiter', 'Recruiter'),
     )
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
+
+    # Override the default USERNAME_FIELD
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    email = models.EmailField(unique=True)
 
     # Ensure unique related names to avoid clashes
     groups = models.ManyToManyField(

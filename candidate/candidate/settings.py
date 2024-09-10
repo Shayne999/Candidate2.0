@@ -128,3 +128,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# added by me =======================================
+# ensures the user of the user model in my models.py
+AUTH_USER_MODEL = 'core.User'
+
+# allows the use of the authenticate function for validating usernames and passwords.
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
