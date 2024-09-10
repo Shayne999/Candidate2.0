@@ -3,10 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Candidate Dashboard</title>
 </head>
 <body>
     <h2>Candidate Dashboard</h2>
+
+
+                    <!-- Candidate CV    -->
+    {% if cv %}
+        <h3>Your CV</h3>
+        <p><strong>Education:</strong>{{ cv.education }}</p>
+        <p><strong>Experience:</strong>{{ cv.experience }}</p>
+
+
+
+                        <!-- Edit CV Button    -->
+        <button>
+            <a href="{% url 'edit_cv' %}">Edit CV</a>
+        </button>
+
+
+    {% else %}
+
+        <p>No CV found. Please add your CV.</p>
+        <button>
+            <a href="{% url 'edit_cv' %}">Create CV</a>
+        </button>
+
+    {% endif %}
 
 
                     <!-- Logout Button    -->

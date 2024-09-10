@@ -3,7 +3,7 @@ from .models import CV
 
 class CVForm(forms.ModelForm):
     class Meta:
-        models = CV
+        model = CV
         fields = [
             'education',
             'experience',

@@ -75,8 +75,13 @@ def candidate_dashboard(request):
     """This method is responsible for rendering the candidate dashboard
     and displaying the candidate's CV.
     """
-    profile = get_object_or_404(CandidateProfile, user= request.user)
-    cv = CV.object.filter(candidate=profile).first()
+    profile, created = CandidateProfile.objects.get_or_create(user= request.user)
+    cv = CV.objects.filter(candidate=profile).first()
+
+    context = {
+        'profile': profile,
+        'cv': cv
+    }
     return render(request, 'candidate_dashboard.html', {'cv': cv})
 
 
@@ -91,7 +96,10 @@ def edit_cv(request):
     if request.method == 'POST':
         form = CVForm(request.POST, instance=cv)
         if form.is_valid():
+            form.save()
             return redirect('candidate_dashboard')
+        else:
+            print("Form is not valid", form.errors)
     else:
         form = CVForm(instance=cv)
 
