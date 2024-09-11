@@ -3,7 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import get_user_model
 from .models import CV, CandidateProfile
-from .forms import CVForm
+from .forms import CVForm, CandidateProfileForm
 from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
@@ -71,39 +71,51 @@ def signup(request):
 
 # candidate dashboard
 def candidate_dashboard(request):
-
     """This method is responsible for rendering the candidate dashboard
     and displaying the candidate's CV.
     """
-    profile, created = CandidateProfile.objects.get_or_create(user= request.user)
+    profile, created = CandidateProfile.objects.get_or_create(user=request.user)
     cv = CV.objects.filter(candidate=profile).first()
 
     context = {
         'profile': profile,
         'cv': cv
     }
-    return render(request, 'candidate_dashboard.html', {'cv': cv})
+    return render(request, 'candidate_dashboard.html', context)
+
 
 
 # edit candidate's CV
 def edit_cv(request):
-
-    """This method handles the edit of the candidate's CV.
-    """
+    """This method handles the edit of the candidate's CV."""
     profile = get_object_or_404(CandidateProfile, user=request.user)
     cv, created = CV.objects.get_or_create(candidate=profile)
 
     if request.method == 'POST':
-        form = CVForm(request.POST, instance=cv)
-        if form.is_valid():
-            form.save()
+        cv_form = CVForm(request.POST, instance=cv)
+        profile_form = CandidateProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
+        
+        if cv_form.is_valid() and profile_form.is_valid():
+            cv_form.save()
+            profile_form.save()
+            # Update the user's first and last name
+            request.user.first_name = profile_form.cleaned_data.get('first_name')
+            request.user.last_name = profile_form.cleaned_data.get('last_name')
+            request.user.email = profile_form.cleaned_data.get('email')
+            request.user.save()
             return redirect('candidate_dashboard')
         else:
-            print("Form is not valid", form.errors)
+            print("Form is not valid", cv_form.errors, profile_form.errors)
     else:
-        form = CVForm(instance=cv)
+        cv_form = CVForm(instance=cv)
+        profile_form = CandidateProfileForm(instance=profile, user=request.user)
 
-    return render(request, 'edit_cv.html', {'form': form})
+    return render(request, 'edit_cv.html', {
+        'cv_form': cv_form,
+        'profile_form': profile_form,
+        'profile': profile
+    })
+
 
 
 # recruiter dashboard

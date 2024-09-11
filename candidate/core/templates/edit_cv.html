@@ -1,22 +1,41 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit CV</title>
 </head>
 <body>
-    <h1>Edit Your CV</h1>
+    <h1>Edit CV</h1>
 
-    <form method="POST">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        
+        <!-- Profile Section -->
+        <div>
+            <h2>Profile</h2>
+            <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{{ '/static/images/Blank profile picture.png' }}{% endif %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+            
+            <!-- Render profile form fields here -->
+            <div>
+                {{ profile_form.as_p }}
+            </div>
+        </div>
+
+        <!-- CV Section -->
+        <div>
+            <h2>CV</h2>
+            <div>
+                {{ cv_form.as_p }}
+            </div>
+        </div>
+
         <button type="submit">Save</button>
     </form>
 
-    <button>
-        <a href="{% url 'candidate_dashboard' %}">Cancel</a>
-    </button>
-    
+    <a href="{% url 'candidate_dashboard' %}">Back to Dashboard</a>
 </body>
 </html>
+
+
+
