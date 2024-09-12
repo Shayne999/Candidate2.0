@@ -1,12 +1,35 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/recruiter_dashboard.css' %}">
+
 </head>
 <body>
     <h1>Recruiter Dashboard</h1>
+
+    {% if candidates %}
+    <div class="candidates-container">
+        {% for candidate in candidates %}
+            <div class="candidate-card">
+                <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture">
+                <h3>{{ candidate.user.get_full_name }}</h3>
+                <p>Field: {{ candidate.cv.field }}</p>
+                <p>Experience: {{ candidate.cv.experience }} years</p>
+                <a href="{% url 'candidate_cv' candidate.id %}">View CV</a>
+
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No candidates</p>
+{% endif %}
 
 
                         <!-- Logout Button    -->

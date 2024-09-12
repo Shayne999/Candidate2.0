@@ -41,8 +41,6 @@ class CandidateProfile(models.Model):
 # CV model to store candidate's CV details
 class CV(models.Model):
     candidate = models.OneToOneField(CandidateProfile, on_delete=models.CASCADE, related_name='cv')
-    education = models.TextField()
-    experience = models.TextField()
     certifications = models.TextField(blank=True, null=True)
     skills = models.TextField(blank=True, null=True)
     projects = models.TextField(blank=True, null=True)
@@ -55,6 +53,32 @@ class CV(models.Model):
 
     def __str__(self):
         return f"{self.candidate.user.username}'s CV"
+    
+
+# work experience model
+class WorkExperience(models.Model):
+    cv = models.ForeignKey('CV', on_delete=models.CASCADE, related_name='work_experience')
+    position = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.position} at {self.company}"
+
+
+# education model
+class Education(models.Model):
+    cv = models.ForeignKey('CV', on_delete=models.CASCADE, related_name='education')
+    institution = models.CharField(max_length=200)
+    degree = models.CharField(max_length=300)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.degree} at {self.institution}"
+    
 
 # Recruiter model
 class RecruiterProfile(models.Model):

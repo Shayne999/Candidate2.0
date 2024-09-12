@@ -1,7 +1,5 @@
 {% load static %}
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,44 +10,69 @@
 <body>
     <h2>Candidate Dashboard</h2>
 
-
-                <!-- Candidate Profile picture and bio    -->
+    <!-- Candidate Profile picture and bio -->
     <div class="profile">
         <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture">
         <h2>{{ profile.user.username }}</h2>
         <p>{{ profile.bio }}</p>
     </div>
-    
 
-
-                    <!-- Candidate CV    -->
+    <!-- Candidate CV -->
     {% if cv %}
         <h3>Your CV</h3>
-        <p><strong>Education:</strong>{{ cv.education }}</p>
-        <p><strong>Experience:</strong>{{ cv.experience }}</p>
+        <p><strong>Certifications:</strong> {{ cv.certifications }}</p>
+        <p><strong>Skills:</strong> {{ cv.skills }}</p>
+        <p><strong>Projects:</strong> {{ cv.projects }}</p>
+        <p><strong>Languages:</strong> {{ cv.languages }}</p>
+        <p><strong>Awards:</strong> {{ cv.awards }}</p>
+        <p><strong>Publications:</strong> {{ cv.publications }}</p>
+        <p><strong>Interests:</strong> {{ cv.interests }}</p>
+        <p><strong>References:</strong> {{ cv.references }}</p>
+        <p><strong>Additional Info:</strong> {{ cv.additional_info }}</p>
+
+        <!-- Display Work Experience -->
+        <h3>Work Experience</h3>
+        {% for experience in work_experiences %}
+            <div class="work-experience">
+                <h4>{{ experience.position }} at {{ experience.company }}</h4>
+                <p>{{ experience.start_date }} - {{ experience.end_date }}</p>
+                <p>{{ experience.description }}</p>
+            </div>
+        {% empty %}
+            <p>No work experience to show.</p>
+        {% endfor %}
 
 
 
-                        <!-- Edit CV Button    -->
+        <!-- Display Education History -->
+        <h3>Education History</h3>
+        {% for education in education_history %}
+            <div class="education-history">
+                <h4>{{ education.institution }}</h4>
+                <p>{{ education.degree }}</p>
+                <p>{{ education.start_date }} - {{ education.end_date }}</p>
+            </div>
+        {% empty %}
+            <p>No education history to show.</p>
+        {% endfor %}
+
+        <!-- Edit CV Button -->
         <button>
             <a href="{% url 'edit_cv' %}">Edit CV</a>
         </button>
 
-
     {% else %}
-
         <p>No CV found. Please add your CV.</p>
         <button>
             <a href="{% url 'edit_cv' %}">Create CV</a>
         </button>
-
     {% endif %}
 
-
-                    <!-- Logout Button    -->
+    <!-- Logout Button -->
     <form method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit">Logout</button>
     </form>
 </body>
 </html>
+

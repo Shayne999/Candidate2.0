@@ -1,12 +1,10 @@
 from django import forms
-from .models import CV, CandidateProfile
+from .models import CV, CandidateProfile, WorkExperience, Education
 
 class CVForm(forms.ModelForm):
     class Meta:
         model = CV
         fields = [
-            'education',
-            'experience',
             'certifications',
             'skills',
             'projects',
@@ -17,6 +15,61 @@ class CVForm(forms.ModelForm):
             'references',
             'additional_info',
         ]
+
+
+class WorkExperienceForm(forms.ModelForm):
+    class Meta:
+        model = WorkExperience
+        fields = [
+            'position',
+            'company',
+            'start_date',
+            'end_date',
+            'description',
+        ]
+
+        # creates a date input widget
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            }
+
+# formset that allows multiple instances of WorkExperienceForm
+WorkExperienceFormSet = forms.inlineformset_factory(
+    CV,
+    WorkExperience,
+    form=WorkExperienceForm,
+    extra=1,
+    can_delete=True
+)
+
+
+# eduaction form
+class EducationForm(forms.ModelForm):
+    class Meta:
+        model = Education
+        fields = [
+            'institution',
+            'degree',
+            'start_date',
+            'end_date',
+        ]
+
+        # creates a date input widget
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            }
+
+
+# Education formset
+EducationFormSet = forms.inlineformset_factory(
+    CV,
+    Education,
+    form=EducationForm,
+    extra=1,
+    can_delete=True
+)
 
 
 class CandidateProfileForm(forms.ModelForm):

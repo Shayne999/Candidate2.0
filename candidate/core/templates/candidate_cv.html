@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.user.first_name }} {{ profile.user.last_name }}'s CV</title>
+    <link rel="stylesheet" href="{% static 'css/cv_styles.css' %}">
+</head>
+<body>
+
+    <!-- Candidate Bio Section -->
+    <div class="profile-header">
+        <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" 
+             alt="Profile Picture" style="width: 150px; height: 150px;">
+        <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}'s CV</h1>
+    </div>
+
+    <!-- Candidate CV Section -->
+    <div class="cv-container">
+        <!-- Left Column -->
+        <div class="left-column">
+            <!-- Contact Section -->
+            <div class="section">
+                <h2>Contact</h2>
+                {% if profile.phone %}<p>Phone: {{ profile.phone }}</p>{% endif %}
+                {% if profile.email %}<p>Email: {{ profile.email }}</p>{% endif %}
+                {% if profile.website %}<p>Website: {{ profile.website }}</p>{% endif %}
+                {% if profile.address %}<p>Address: {{ profile.address }}</p>{% endif %}
+                <hr>
+            </div>
+
+            <!-- Skills Section -->
+            {% if cv.skills %}
+            <div class="section">
+                <h2>Skills</h2>
+                <ul>
+                    {% for skill in cv.skills %}
+                    <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                <hr>
+            </div>
+            {% endif %}
+
+
+             <!-- Education Section -->
+            {% if education_history %}
+                <div class="section">
+                    <h2>Education</h2>
+                    {% for education in education_history %}
+                        <div>
+                            <h4><strong>{{ education.institution }}</strong> - {{ education.degree }}</h4>
+                            <p>{{ education.start_date }} - {{ education.end_date }}</p>
+                            <hr>
+                        </div>
+                    {% empty %}
+                        <p>No education information available.</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Languages Section -->
+            {% if cv.languages %}
+            <div class="section">
+                <h2>Languages</h2>
+                <ul>
+                    {% for language in cv.languages %}
+                    <li>{{ language }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- Profile Section -->
+            {% if profile.bio %}
+            <div class="section">
+                <h2>Profile</h2>
+                <p>{{ profile.bio }}</p>
+                <hr>
+            </div>
+            {% endif %}
+
+            <!-- Work Experience Section -->
+            {% if work_experiences %}
+            <div class="section">
+                <h2>Work Experience</h2>
+                {% for job in work_experiences %}
+                <div class="work-experience">
+                    <h3><strong>{{ job.position }}</strong> - {{ job.company }}</h3>
+                    <p>{{ job.start_date }} - {{ job.end_date }}</p>
+                    <p>{{ job.description }}</p>
+                    <hr>
+                </div>
+                {% empty %}
+                <p>No work experience to show.</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'recruiter_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>
+
+

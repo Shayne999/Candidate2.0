@@ -4,22 +4,30 @@
 <html>
 <head>
     <title>Edit CV</title>
+    <link rel="stylesheet" href="{% static 'css/cv_styles.css' %}">
 </head>
 <body>
     <h1>Edit CV</h1>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Profile Section -->
         <div>
             <h2>Profile</h2>
-            <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{{ '/static/images/Blank profile picture.png' }}{% endif %}" alt="Profile Picture" style="width: 150px; height: 150px;">
-            
+            <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+
             <!-- Render profile form fields here -->
             <div>
                 {{ profile_form.as_p }}
             </div>
+
+            {% if profile_form.errors %}
+                <div class="errors">
+                    <h2>Profile Form Errors:</h2>
+                    {{ profile_form.errors.as_ul }}
+                </div>
+            {% endif %}
         </div>
 
         <!-- CV Section -->
@@ -28,6 +36,63 @@
             <div>
                 {{ cv_form.as_p }}
             </div>
+
+            {% if cv_form.errors %}
+                <div class="errors">
+                    <h2>CV Form Errors:</h2>
+                    {{ cv_form.errors.as_ul }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Work Experience Section -->
+        <div>
+            <h2>Work Experience</h2>
+            {{ work_experience_formset.management_form }}
+            {% for form in work_experience_formset %}
+                <div class="work-experience-form">
+                    {{ form.as_p }}
+                    {% if form.instance.pk %}
+                        <!-- Checkbox for deleting work experience -->
+                        <label for="{{ form.DELETE.id_for_label }}">Delete this experience:</label>
+                        {{ form.DELETE }}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No work experiences added yet. Add your first experience below.</p>
+            {% endfor %}
+
+            {% if work_experience_formset.errors %}
+                <div class="errors">
+                    <h2>Work Experience Form Errors:</h2>
+                    {{ work_experience_formset.errors.as_ul }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Education History Section -->
+        <div>
+            <h2>Education History</h2>
+            {{ education_history_formset.management_form }}
+            {% for form in education_history_formset %}
+                <div class="education-form">
+                    {{ form.as_p }}
+                    {% if form.instance.pk %}
+                        <!-- Checkbox for deleting education history -->
+                        <label for="{{ form.DELETE.id_for_label }}">Delete this education:</label>
+                        {{ form.DELETE }}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No education history added yet. Add your first entry below.</p>
+            {% endfor %}
+
+            {% if education_history_formset.errors %}
+                <div class="errors">
+                    <h2>Education History Form Errors:</h2>
+                    {{ education_history_formset.errors.as_ul }}
+                </div>
+            {% endif %}
         </div>
 
         <button type="submit">Save</button>
@@ -36,6 +101,8 @@
     <a href="{% url 'candidate_dashboard' %}">Back to Dashboard</a>
 </body>
 </html>
+
+
 
 
 
