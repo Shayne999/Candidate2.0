@@ -17,26 +17,31 @@
         <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}'s CV</h1>
     </div>
 
+
     <!-- Candidate CV Section -->
     <div class="cv-container">
         <!-- Left Column -->
         <div class="left-column">
             <!-- Contact Section -->
-            <div class="section">
-                <h2>Contact</h2>
-                {% if profile.phone %}<p>Phone: {{ profile.phone }}</p>{% endif %}
-                {% if profile.email %}<p>Email: {{ profile.email }}</p>{% endif %}
-                {% if profile.website %}<p>Website: {{ profile.website }}</p>{% endif %}
-                {% if profile.address %}<p>Address: {{ profile.address }}</p>{% endif %}
-                <hr>
-            </div>
+            {% if contact_info %}
+                <div class="section">
+                    <h2>Candidate Contact</h2>
+                    <p>Phone: {{ contact_info.phone_number }}</p>
+                    <p>Email: {{ contact_info.email }}</p>
+                </div>
+            {% else %}
+                <p>No contact information available.</p>
+            {% endif %}
+            
+            
+
 
             <!-- Skills Section -->
-            {% if cv.skills %}
+            {% if skills_list %}
             <div class="section">
                 <h2>Skills</h2>
                 <ul>
-                    {% for skill in cv.skills %}
+                    {% for skill in skills_list %}
                     <li>{{ skill }}</li>
                     {% endfor %}
                 </ul>

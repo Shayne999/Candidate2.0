@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import get_user_model
-from .models import CV, CandidateProfile, WorkExperience, Education
-from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills
+from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
 
@@ -77,14 +77,19 @@ def candidate_dashboard(request):
     """
     profile, created = CandidateProfile.objects.get_or_create(user=request.user)
     cv = CV.objects.filter(candidate=profile).first()
+    contact_info = Contact.objects.filter(cv=cv).first()
     work_experiences = WorkExperience.objects.filter(cv=cv)
     education_history = Education.objects.filter(cv=cv)
+    skills_list = Skills.objects.filter(cv=cv)
+    
 
     context = {
         'profile': profile,
         'cv': cv,
         'work_experiences': work_experiences,
-        'education_history': education_history
+        'education_history': education_history,
+        'contact_info': contact_info,
+        'skills_list': skills_list
     }
     return render(request, 'candidate_dashboard.html', context)
 
@@ -95,6 +100,8 @@ def edit_cv(request):
     """This method handles the edit of the candidate's CV."""
     profile = get_object_or_404(CandidateProfile, user=request.user)
     cv, created = CV.objects.get_or_create(candidate=profile)
+
+    contact, contact_created = Contact.objects.get_or_create(cv=cv)
 
     #experience formset
     WorkExperienceFormSet = modelformset_factory(
@@ -116,15 +123,36 @@ def edit_cv(request):
     education_history_qs = Education.objects.filter(cv=cv)
 
 
+    # Skills formset
+    SkillsFormSet = modelformset_factory(
+        Skills,
+        form=SkillsForm,
+        extra=1,
+        can_delete=True
+    )
+    skills_qs = Skills.objects.filter(cv=cv)
+
+
     if request.method == 'POST':
         cv_form = CVForm(request.POST, instance=cv)
         profile_form = CandidateProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
+        contact_info_form = ContactForm(request.POST, instance=contact)
         work_experience_formset = WorkExperienceFormSet(request.POST, queryset=work_experience_qs)
         education_history_formset = EducationFormSet(request.POST, queryset=education_history_qs)
+        skills_formset = SkillsFormSet(request.POST, queryset=skills_qs)
         
-        if cv_form.is_valid() and profile_form.is_valid() and work_experience_formset.is_valid() and education_history_formset.is_valid():
+        
+        if (
+            cv_form.is_valid() and
+            profile_form.is_valid() and
+            work_experience_formset.is_valid() and
+            education_history_formset.is_valid() and
+            contact_info_form.is_valid() and
+            skills_formset.is_valid()
+        ):
             cv_form.save()
             profile_form.save()
+            contact_info_form.save()
 
             # Update the user's first and last name
             request.user.first_name = profile_form.cleaned_data.get('first_name')
@@ -154,21 +182,45 @@ def edit_cv(request):
             for education in education_history_formset.deleted_objects:
                 education.delete()
 
+
+            # Save the skills
+            skills = skills_formset.save(commit=False)
+            for skill in skills:
+                skill.cv = cv
+                skill.save()
+
+            # deletes the skills that has been deleted
+            for skill in skills_formset.deleted_objects:
+                skill.delete()
+
             return redirect('candidate_dashboard')
         else:
-            print("Form is not valid", cv_form.errors, profile_form.errors, work_experience_formset.errors, education_history_formset.errors)
+            print(
+                "Form is not valid",
+                cv_form.errors,
+                profile_form.errors,
+                work_experience_formset.errors,
+                education_history_formset.errors,
+                contact_info_form.errors,
+                skills_formset.errors
+                )
     else:
         cv_form = CVForm(instance=cv)
         profile_form = CandidateProfileForm(instance=profile, user=request.user)
+        contact_info_form = ContactForm(instance=contact)
         work_experience_formset = WorkExperienceFormSet(queryset=work_experience_qs)
         education_history_formset = EducationFormSet(queryset=education_history_qs)
+        skills_formset = SkillsFormSet(queryset=skills_qs)
+        
 
     return render(request, 'edit_cv.html', {
         'cv_form': cv_form,
         'profile_form': profile_form,
         'work_experience_formset': work_experience_formset,
         'education_history_formset': education_history_formset,
-        'profile': profile
+        'profile': profile,
+        'contact_form': contact_info_form,
+        'skills_formset': skills_formset
     })
 
 
@@ -193,13 +245,16 @@ def candidate_cv(request, candidate_id):
 
     profile = get_object_or_404(CandidateProfile, id=candidate_id)
     cv = CV.objects.filter(candidate=profile).first()
+    contact_info = Contact.objects.filter(cv=cv).first() if cv else None
     work_experiences = WorkExperience.objects.filter(cv=cv) if cv else []
     education_history = Education.objects.filter(cv=cv) if cv else []
+    skills_list = Skills.objects.filter(cv=cv) if cv else []
+    
+
 
     # dynamically displayes cv sections based on whether they were filled in or not
     sections = [
         {"label": "Certifications", "data": cv.certifications},
-        {"label": "Skills", "data": cv.skills},
         {"label": "Projects", "data": cv.projects},
         {"label": "Languages", "data": cv.languages},
         {"label": "Awards", "data": cv.awards},
@@ -216,7 +271,9 @@ def candidate_cv(request, candidate_id):
         'cv': cv,
         'filled_sections': filled_sections,
         'work_experiences': work_experiences,
-        'education_history': education_history
+        'education_history': education_history,
+        'contact_info': contact_info,
+        'skills_list': skills_list
 
         
     }

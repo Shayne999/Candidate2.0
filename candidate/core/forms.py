@@ -1,12 +1,11 @@
 from django import forms
-from .models import CV, CandidateProfile, WorkExperience, Education
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills
 
 class CVForm(forms.ModelForm):
     class Meta:
         model = CV
         fields = [
             'certifications',
-            'skills',
             'projects',
             'languages',
             'awards',
@@ -17,6 +16,18 @@ class CVForm(forms.ModelForm):
         ]
 
 
+#==============Contact Form===================
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = [
+            'phone_number',
+            'email'
+        ]
+
+
+#==============Work Experience Form==================
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
@@ -44,7 +55,8 @@ WorkExperienceFormSet = forms.inlineformset_factory(
 )
 
 
-# eduaction form
+#==============Education Form==================
+
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
@@ -62,7 +74,7 @@ class EducationForm(forms.ModelForm):
             }
 
 
-# Education formset
+# Education formset allows multiple instances of EducationForm
 EducationFormSet = forms.inlineformset_factory(
     CV,
     Education,
@@ -71,6 +83,25 @@ EducationFormSet = forms.inlineformset_factory(
     can_delete=True
 )
 
+
+# =================Skills Form=====================
+class SkillsForm(forms.ModelForm):
+    class Meta:
+        model = Skills
+        fields = ['skill']
+
+
+# formset that allows multiple instances of SkillsForm
+SkillsFormSet = forms.inlineformset_factory(
+    CV,
+    Skills,
+    form=SkillsForm,
+    extra=1,
+    can_delete=True
+)
+
+
+#==============Candidate Profile Form==================
 
 class CandidateProfileForm(forms.ModelForm):
     # Adding fields for first and last name

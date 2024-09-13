@@ -31,7 +31,7 @@
         </div>
 
         <!-- CV Section -->
-        <div>
+        <!-- <div>
             <h2>CV</h2>
             <div>
                 {{ cv_form.as_p }}
@@ -41,6 +41,18 @@
                 <div class="errors">
                     <h2>CV Form Errors:</h2>
                     {{ cv_form.errors.as_ul }}
+                </div>
+            {% endif %}
+        </div> -->
+
+        <!-- Contact Section -->
+        <div></div>
+            <h2>Contact</h2>
+            {{ contact_form.as_p }}
+            {% if contact_form.errors %}
+                <div class="errors">
+                    <h2>Contact Form Errors:</h2>
+                    {{ contact_form.errors.as_ul }}
                 </div>
             {% endif %}
         </div>
@@ -91,6 +103,30 @@
                 <div class="errors">
                     <h2>Education History Form Errors:</h2>
                     {{ education_history_formset.errors.as_ul }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Skills Section -->
+        <div>
+            <h2>Skills</h2>
+            {{ skills_formset.management_form }}
+            {% for form in skills_formset %}
+                <div class="'skills-form">
+                    {{ form.as_p }}
+                    {% if form.instance.pk %}
+                        <label for="{{ form.DELETE.id_for_label }}">Delete this skill:</label>
+                    {{  form.DELETE }}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No skills added yet. Add your first skill below.</p>
+            {% endfor %}
+
+            {% if skill_list_formset.errors %}
+                <div class="errors">
+                    <h2>Skills Form Errors:</h2>
+                    {{ skill_list_formset.errors.as_ul }}
                 </div>
             {% endif %}
         </div>

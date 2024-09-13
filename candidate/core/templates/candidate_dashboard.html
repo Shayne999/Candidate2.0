@@ -21,7 +21,6 @@
     {% if cv %}
         <h3>Your CV</h3>
         <p><strong>Certifications:</strong> {{ cv.certifications }}</p>
-        <p><strong>Skills:</strong> {{ cv.skills }}</p>
         <p><strong>Projects:</strong> {{ cv.projects }}</p>
         <p><strong>Languages:</strong> {{ cv.languages }}</p>
         <p><strong>Awards:</strong> {{ cv.awards }}</p>
@@ -29,6 +28,15 @@
         <p><strong>Interests:</strong> {{ cv.interests }}</p>
         <p><strong>References:</strong> {{ cv.references }}</p>
         <p><strong>Additional Info:</strong> {{ cv.additional_info }}</p>
+
+        <!-- Display Contact Info -->
+         <h3>Contact Info</h3>
+         {% if contact_info %}
+         <div class="contact-info">
+             <p>Phone: {{ contact_info.phone_number }}</p>
+             <p>Email: {{ contact_info.email }}</p>
+         </div>
+         {% endif %}
 
         <!-- Display Work Experience -->
         <h3>Work Experience</h3>
@@ -55,6 +63,20 @@
         {% empty %}
             <p>No education history to show.</p>
         {% endfor %}
+
+
+
+        <!-- Display Skills -->
+        <h3>Skills</h3>
+        {% if skills_list %}
+            {% for skill in skills_list %}
+                <div class="skills-list">
+                    <p>{{ skill.skill }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No skills to show.</p>
+        {% endif %}
 
         <!-- Edit CV Button -->
         <button>

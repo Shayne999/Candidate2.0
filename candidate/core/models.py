@@ -42,7 +42,6 @@ class CandidateProfile(models.Model):
 class CV(models.Model):
     candidate = models.OneToOneField(CandidateProfile, on_delete=models.CASCADE, related_name='cv')
     certifications = models.TextField(blank=True, null=True)
-    skills = models.TextField(blank=True, null=True)
     projects = models.TextField(blank=True, null=True)
     languages = models.TextField(blank=True, null=True)
     awards = models.TextField(blank=True, null=True)
@@ -53,7 +52,17 @@ class CV(models.Model):
 
     def __str__(self):
         return f"{self.candidate.user.username}'s CV"
-    
+
+
+#contact model
+class Contact(models.Model):
+    cv = models.ForeignKey('CV', on_delete=models.CASCADE, related_name='contact')
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.phone_number} at {self.email}"
+
 
 # work experience model
 class WorkExperience(models.Model):
@@ -79,6 +88,14 @@ class Education(models.Model):
     def __str__(self):
         return f"{self.degree} at {self.institution}"
     
+
+# skills model
+class Skills(models.Model):
+    cv = models.ForeignKey('CV', on_delete=models.CASCADE, related_name='skills')
+    skill = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.skill
 
 # Recruiter model
 class RecruiterProfile(models.Model):
