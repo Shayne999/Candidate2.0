@@ -1,22 +1,13 @@
 from django import forms
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects
+
 
 class CVForm(forms.ModelForm):
     class Meta:
         model = CV
         fields = [
-            'certifications',
-            'projects',
-            'languages',
-            'awards',
-            'publications',
-            'interests',
-            'references',
-            'additional_info',
+            
         ]
-
-
-#==============Contact Form===================
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -27,7 +18,6 @@ class ContactForm(forms.ModelForm):
         ]
 
 
-#==============Work Experience Form==================
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
@@ -44,18 +34,13 @@ class WorkExperienceForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
             }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
-# formset that allows multiple instances of WorkExperienceForm
-WorkExperienceFormSet = forms.inlineformset_factory(
-    CV,
-    WorkExperience,
-    form=WorkExperienceForm,
-    extra=1,
-    can_delete=True
-)
-
-
-#==============Education Form==================
 
 class EducationForm(forms.ModelForm):
     class Meta:
@@ -72,36 +57,79 @@ class EducationForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
             }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-# Education formset allows multiple instances of EducationForm
-EducationFormSet = forms.inlineformset_factory(
-    CV,
-    Education,
-    form=EducationForm,
-    extra=1,
-    can_delete=True
-)
+class ReferencesForm(forms.ModelForm):
+    class Meta:
+        model = References
+        fields = [
+            'name',
+            'company',
+            'position',
+            'email',
+            'phone_number',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-# =================Skills Form=====================
 class SkillsForm(forms.ModelForm):
     class Meta:
         model = Skills
         fields = ['skill']
 
-
-# formset that allows multiple instances of SkillsForm
-SkillsFormSet = forms.inlineformset_factory(
-    CV,
-    Skills,
-    form=SkillsForm,
-    extra=1,
-    can_delete=True
-)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-#==============Candidate Profile Form==================
+class LanguagesForm(forms.ModelForm):
+    class Meta:
+        model = Languages
+        fields = ['language']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
+
+class ProjectsForm(forms.ModelForm):
+    class Meta:
+        model = Projects
+        fields = ['name', 'link', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
+
+class AdditionalInfoForm(forms.ModelForm):
+    class Meta:
+        model = AdditionaleInformation
+        fields = ['additional_information']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
 
 class CandidateProfileForm(forms.ModelForm):
     # Adding fields for first and last name
