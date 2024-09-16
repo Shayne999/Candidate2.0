@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import get_user_model
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills
-from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm
-from django.forms import modelformset_factory
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects
+from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm, LanguagesForm, ReferencesForm, AdditionalInfoForm, ProjectsForm
 from django.contrib.auth.decorators import login_required
+from django.contrib  import messages
+from django.db import IntegrityError, OperationalError
+from django.forms import inlineformset_factory
 
 User = get_user_model()
 
@@ -77,10 +79,22 @@ def candidate_dashboard(request):
     """
     profile, created = CandidateProfile.objects.get_or_create(user=request.user)
     cv = CV.objects.filter(candidate=profile).first()
+    if not cv:
+        cv = CV(candidate=profile)
+        cv.save()
+
     contact_info = Contact.objects.filter(cv=cv).first()
+    if not contact_info:
+        contact_info = Contact(cv=cv)
+        contact_info.save()
+
     work_experiences = WorkExperience.objects.filter(cv=cv)
     education_history = Education.objects.filter(cv=cv)
     skills_list = Skills.objects.filter(cv=cv)
+    language_list = Languages.objects.filter(cv=cv)
+    reference_list = References.objects.filter(cv=cv)
+    additional_info = AdditionaleInformation.objects.filter(cv=cv)
+    project_list = Projects.objects.filter(cv=cv)
     
 
     context = {
@@ -89,143 +103,228 @@ def candidate_dashboard(request):
         'work_experiences': work_experiences,
         'education_history': education_history,
         'contact_info': contact_info,
-        'skills_list': skills_list
+        'skills_list': skills_list,
+        'language_list': language_list,
+        'reference_list': reference_list,
+        'additional_info': additional_info,
+        'project_list': project_list
     }
     return render(request, 'candidate_dashboard.html', context)
 
 
 
-# edit candidate's CV
-def edit_cv(request):
-    """This method handles the edit of the candidate's CV."""
-    profile = get_object_or_404(CandidateProfile, user=request.user)
-    cv, created = CV.objects.get_or_create(candidate=profile)
+# ===================================edit candidate's CV===================================
 
-    contact, contact_created = Contact.objects.get_or_create(cv=cv)
+# ==========formsets==========
 
-    #experience formset
-    WorkExperienceFormSet = modelformset_factory(
-        WorkExperience,
-        form=WorkExperienceForm,
-        extra=1,
-        can_delete=True
-    )
-    work_experience_qs = WorkExperience.objects.filter(cv=cv)
-
-
-    # education formset
-    EducationFormSet = modelformset_factory(
+def handle_education_formset(cv, post_data=None):
+    EducationFormSet = inlineformset_factory(
+        CV,
         Education,
         form=EducationForm,
+        fields=['institution', 'qualification', 'start_date', 'end_date'],
         extra=1,
         can_delete=True
     )
-    education_history_qs = Education.objects.filter(cv=cv)
+
+    if post_data:
+        return EducationFormSet(post_data, instance=cv)
+    return EducationFormSet(instance=cv)
 
 
-    # Skills formset
-    SkillsFormSet = modelformset_factory(
+def handle_work_experience_formset(cv, post_data=None):
+    WorkExperienceFormSet = inlineformset_factory(
+        CV,
+        WorkExperience,
+        form=WorkExperienceForm,
+        fields=['position', 'company', 'start_date', 'end_date'],
+        extra=1,
+        can_delete=True
+    )
+    
+    if post_data:
+        return WorkExperienceFormSet(post_data, instance=cv)
+    return WorkExperienceFormSet(instance=cv)
+
+
+def handle_skill_formset(cv, post_data=None):
+    SkillFormSet = inlineformset_factory(
+        CV,
         Skills,
         form=SkillsForm,
+        fields=['skill'],
         extra=1,
         can_delete=True
     )
-    skills_qs = Skills.objects.filter(cv=cv)
+
+    if post_data:
+        return SkillFormSet(post_data, instance=cv)
+    return SkillFormSet(instance=cv)
+
+
+def handle_language_formset(cv, post_data=None):
+    LanguageFormSet = inlineformset_factory(
+        CV,
+        Languages,
+        form=LanguagesForm,
+        fields=['language'],
+        extra=1,
+        can_delete=True
+    )
+
+    if post_data:
+        return LanguageFormSet(post_data, instance=cv)
+    return LanguageFormSet(instance=cv)
+
+
+def handle_reference_formset(cv, post_data=None):
+    ReferenceFormSet = inlineformset_factory(
+        CV,
+        References,
+        form=ReferencesForm,
+        fields=['name', 'company', 'position', 'email', 'phone_number'],
+        extra=1,
+        can_delete=True
+    )
+
+    if post_data:
+        return ReferenceFormSet(post_data, instance=cv)
+    return ReferenceFormSet(instance=cv)
+
+
+def handle_additional_info_formset(cv, post_data=None):
+    AdditionalInfoFormSet = inlineformset_factory(
+        CV,
+        AdditionaleInformation,
+        form=AdditionalInfoForm,
+        fields=['additional_information'],
+        extra=1,
+        can_delete=True
+    )
+
+    if post_data:
+        return AdditionalInfoFormSet(post_data, instance=cv)
+    return AdditionalInfoFormSet(instance=cv)
+
+
+def handle_project_formset(cv, post_data=None):
+    ProjectFormSet = inlineformset_factory(
+        CV,
+        Projects,
+        form=ProjectsForm,
+        fields=['name', 'link', 'description'],
+        extra=1,
+        can_delete=True
+    )
+
+    if post_data:
+        return ProjectFormSet(post_data, instance=cv)
+    return ProjectFormSet(instance=cv)
+
+
+# ==========update user info==========
+def update_user_info(request, profile_form):
+    """Update the user's information."""
+    request.user.first_name = profile_form.cleaned_data.get('first_name')
+    request.user.last_name = profile_form.cleaned_data.get('last_name')
+    request.user.email = profile_form.cleaned_data.get('email')
+    request.user.save()
+
+
+
+# ==========edit CV==========
+
+def edit_cv(request): 
+    """Handle the editing of the candidate's CV."""
+    profile = get_object_or_404(CandidateProfile, user=request.user)
+    cv, created = CV.objects.get_or_create(candidate=profile)
+    contact, contact_created = Contact.objects.get_or_create(cv=cv)
 
 
     if request.method == 'POST':
+        # Initialize forms with POST data
         cv_form = CVForm(request.POST, instance=cv)
         profile_form = CandidateProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
         contact_info_form = ContactForm(request.POST, instance=contact)
-        work_experience_formset = WorkExperienceFormSet(request.POST, queryset=work_experience_qs)
-        education_history_formset = EducationFormSet(request.POST, queryset=education_history_qs)
-        skills_formset = SkillsFormSet(request.POST, queryset=skills_qs)
-        
-        
-        if (
-            cv_form.is_valid() and
-            profile_form.is_valid() and
-            work_experience_formset.is_valid() and
-            education_history_formset.is_valid() and
-            contact_info_form.is_valid() and
-            skills_formset.is_valid()
-        ):
+
+        education_formset = handle_education_formset(cv, request.POST)
+        work_experience_formset = handle_work_experience_formset(cv, request.POST)
+        skills_formset = handle_skill_formset(cv, request.POST)
+        language_formset = handle_language_formset(cv, request.POST)
+        reference_formset = handle_reference_formset(cv, request.POST)
+        additional_info_formset = handle_additional_info_formset(cv, request.POST)
+        project_formset = handle_project_formset(cv, request.POST)
+
+
+        # Check if all forms and formsets are valid
+        if all([cv_form.is_valid(), profile_form.is_valid(), contact_info_form.is_valid(),
+                education_formset.is_valid(), work_experience_formset.is_valid(),skills_formset.is_valid(),
+                language_formset.is_valid(), reference_formset.is_valid(), additional_info_formset.is_valid(),
+                project_formset.is_valid()]):
+
+            # Save the forms and formsets
             cv_form.save()
             profile_form.save()
             contact_info_form.save()
 
-            # Update the user's first and last name
-            request.user.first_name = profile_form.cleaned_data.get('first_name')
-            request.user.last_name = profile_form.cleaned_data.get('last_name')
-            request.user.email = profile_form.cleaned_data.get('email')
-            request.user.save()
+            education_formset.save()
+            work_experience_formset.save()
+            skills_formset.save()
+            language_formset.save()
+            reference_formset.save()
+            additional_info_formset.save()
+            project_formset.save()
 
 
-            # Save the work experience
-            work_experiences = work_experience_formset.save(commit=False)
-            for experience in work_experiences:
-                experience.cv = cv
-                experience.save()
-
-            # deletes the work experience that has been deleted
-            for experience in work_experience_formset.deleted_objects:
-                experience.delete()
-
-
-            # Save the education history
-            education_history = education_history_formset.save(commit=False)
-            for education in education_history:
-                education.cv = cv
-                education.save()
-
-            # deletes the education history that has been deleted
-            for education in education_history_formset.deleted_objects:
-                education.delete()
-
-
-            # Save the skills
-            skills = skills_formset.save(commit=False)
-            for skill in skills:
-                skill.cv = cv
-                skill.save()
-
-            # deletes the skills that has been deleted
-            for skill in skills_formset.deleted_objects:
-                skill.delete()
-
+            messages.success(request, 'Your CV has been updated successfully!')
             return redirect('candidate_dashboard')
         else:
-            print(
-                "Form is not valid",
-                cv_form.errors,
-                profile_form.errors,
-                work_experience_formset.errors,
-                education_history_formset.errors,
-                contact_info_form.errors,
-                skills_formset.errors
-                )
+
+            # Print individual form validation errors for debugging
+            if not cv_form.is_valid():
+                print("CV Form errors:", cv_form.errors)
+            if not profile_form.is_valid():
+                print("Profile Form errors:", profile_form.errors)
+            if not contact_info_form.is_valid():
+                print("Contact Form errors:", contact_info_form.errors)
+
+            messages.error(request, 'Please correct the errors below.')
+
     else:
+        # Initialize forms and formsets for GET requests
         cv_form = CVForm(instance=cv)
         profile_form = CandidateProfileForm(instance=profile, user=request.user)
         contact_info_form = ContactForm(instance=contact)
-        work_experience_formset = WorkExperienceFormSet(queryset=work_experience_qs)
-        education_history_formset = EducationFormSet(queryset=education_history_qs)
-        skills_formset = SkillsFormSet(queryset=skills_qs)
-        
+
+
+        education_formset = handle_education_formset(cv)
+        work_experience_formset = handle_work_experience_formset(cv)
+        skills_formset = handle_skill_formset(cv)
+        language_formset = handle_language_formset(cv)
+        reference_formset = handle_reference_formset(cv)
+        additional_info_formset = handle_additional_info_formset(cv)
+        project_formset = handle_project_formset(cv)
 
     return render(request, 'edit_cv.html', {
-        'cv_form': cv_form,
-        'profile_form': profile_form,
-        'work_experience_formset': work_experience_formset,
-        'education_history_formset': education_history_formset,
         'profile': profile,
-        'contact_form': contact_info_form,
-        'skills_formset': skills_formset
+        'cv': cv,
+        'profile_form': profile_form,
+        'contact_info_form': contact_info_form,
+        'education_formset': education_formset,
+        'work_experience_formset': work_experience_formset,
+        'skills_formset': skills_formset,
+        'language_formset': language_formset,
+        'reference_formset': reference_formset,
+        'additional_info_formset': additional_info_formset,
+        'project_formset': project_formset
     })
 
 
+#==========================================================================================
 
-# recruiter dashboard
+
+
+# ================recruiter dashboard===============
 def recruiter_dashboard(request):
 
     """This method renders the recruiter dashboard with candidate cards."""
@@ -249,31 +348,23 @@ def candidate_cv(request, candidate_id):
     work_experiences = WorkExperience.objects.filter(cv=cv) if cv else []
     education_history = Education.objects.filter(cv=cv) if cv else []
     skills_list = Skills.objects.filter(cv=cv) if cv else []
-    
+    languages_list = Languages.objects.filter(cv=cv) if cv else []
+    reference_list = References.objects.filter(cv=cv) if cv else []
+    additional_info = AdditionaleInformation.objects.filter(cv=cv) if cv else []
+    project_list = Projects.objects.filter(cv=cv) if cv else []
 
-
-    # dynamically displayes cv sections based on whether they were filled in or not
-    sections = [
-        {"label": "Certifications", "data": cv.certifications},
-        {"label": "Projects", "data": cv.projects},
-        {"label": "Languages", "data": cv.languages},
-        {"label": "Awards", "data": cv.awards},
-        {"label": "Publications", "data": cv.publications},
-        {"label": "Interests", "data": cv.interests},
-        {"label": "References", "data": cv.references},
-        {"label": "Additional Info", "data": cv.additional_info},
-    ]
-
-    filled_sections = [section for section in sections if section["data"]]
 
     context = {
         'profile': profile,
         'cv': cv,
-        'filled_sections': filled_sections,
         'work_experiences': work_experiences,
         'education_history': education_history,
         'contact_info': contact_info,
-        'skills_list': skills_list
+        'skills_list': skills_list,
+        'languages_list': languages_list,
+        'reference_list': reference_list,
+        'additional_info': additional_info,
+        'project_list': project_list
 
         
     }

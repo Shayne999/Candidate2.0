@@ -22,12 +22,9 @@
         <h3>Your CV</h3>
         <p><strong>Certifications:</strong> {{ cv.certifications }}</p>
         <p><strong>Projects:</strong> {{ cv.projects }}</p>
-        <p><strong>Languages:</strong> {{ cv.languages }}</p>
         <p><strong>Awards:</strong> {{ cv.awards }}</p>
         <p><strong>Publications:</strong> {{ cv.publications }}</p>
         <p><strong>Interests:</strong> {{ cv.interests }}</p>
-        <p><strong>References:</strong> {{ cv.references }}</p>
-        <p><strong>Additional Info:</strong> {{ cv.additional_info }}</p>
 
         <!-- Display Contact Info -->
          <h3>Contact Info</h3>
@@ -40,29 +37,33 @@
 
         <!-- Display Work Experience -->
         <h3>Work Experience</h3>
-        {% for experience in work_experiences %}
-            <div class="work-experience">
-                <h4>{{ experience.position }} at {{ experience.company }}</h4>
-                <p>{{ experience.start_date }} - {{ experience.end_date }}</p>
-                <p>{{ experience.description }}</p>
-            </div>
-        {% empty %}
+        {% if work_experiences %}
+            {% for experience in work_experiences %}
+                <div class="work-experience">
+                    <h4>{{ experience.position }} at {{ experience.company }}</h4>
+                    <p>{{ experience.start_date }} - {{ experience.end_date }}</p>
+                    <p>{{ experience.description }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
             <p>No work experience to show.</p>
-        {% endfor %}
+        {% endif %}
 
 
 
         <!-- Display Education History -->
         <h3>Education History</h3>
-        {% for education in education_history %}
-            <div class="education-history">
-                <h4>{{ education.institution }}</h4>
-                <p>{{ education.degree }}</p>
-                <p>{{ education.start_date }} - {{ education.end_date }}</p>
-            </div>
-        {% empty %}
+        {% if education_history %}
+            {% for education in education_history %}
+                <div class="education-history">
+                    <h4>{{ education.institution }}</h4>
+                    <p>{{ education.degree }}</p>
+                    <p>{{ education.start_date }} - {{ education.end_date }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
             <p>No education history to show.</p>
-        {% endfor %}
+        {% endif %}
 
 
 
@@ -78,10 +79,70 @@
             <p>No skills to show.</p>
         {% endif %}
 
+
+        <!-- Languages -->
+        <h3>Languages</h3>
+        {% if language_list %}
+            {% for language in language_list %}
+                <div class="languages-list">
+                    <p>{{ language }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No languages to show.</p>
+        {% endif %}
+
+
+
+
+        <!-- Projects-->
+        <h3>Projects</h3>
+        {% if project_list %}
+            {% for project in project_list %}
+                <div class="projects-list">
+                    <p>{{ project }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No projects to show.</p>
+        {% endif %}
+
+
+        <!--References-->
+        <h3>References</h3>
+        {% if reference_list %}
+            {% for reference in reference_list %}
+                <div class="references-list">
+                    <p>{{ reference.name }}</p>
+                    <p>{{ reference.company }} / {{ reference.position }}</p>
+                    <p>{{ reference.phone_number }}</p>
+                    <p>{{ reference.email }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No references to show.</p>
+        {% endif %}
+
+
+        <!-- Additional Info -->
+        <h3>Additional Information</h3>
+        {% if additional_info %}
+                {% for info in additional_info %}
+                    <div class="additional-info">
+                        <p>{{ info }}</p>
+                    </div>
+                {% endfor %}
+        {% else %}
+            <p>No additional information to show.</p>
+         {% endif %}
+
+
+
         <!-- Edit CV Button -->
         <button>
             <a href="{% url 'edit_cv' %}">Edit CV</a>
         </button>
+
 
     {% else %}
         <p>No CV found. Please add your CV.</p>

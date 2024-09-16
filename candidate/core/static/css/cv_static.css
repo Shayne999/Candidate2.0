@@ -59,3 +59,11 @@ hr {
     border-top: 1px solid #ddd;
     margin: 10px 0;
 }
+
+
+
+/***********************FORM STYLING ********************/
+.section-separator {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

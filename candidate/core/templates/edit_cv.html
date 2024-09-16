@@ -1,142 +1,225 @@
+{% extends 'base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit CV</title>
-    <link rel="stylesheet" href="{% static 'css/cv_styles.css' %}">
-</head>
-<body>
-    <h1>Edit CV</h1>
+{% block content %}
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+<div class="container my-4">
+    <div class="shadow p-4 mb-5 bg-body rounded">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-        <!-- Profile Section -->
-        <div>
-            <h2>Profile</h2>
-            <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+            <!-- Profile Section -->
+            <div class="row g-3 align-items-center" style="margin-top: 30px;">
+                <div class="form-control">
+                    <h2>Profile</h2>
+                    <div>
+                        <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 150px; height: 150px;">
+                    </div>
+                    
+                    <div class="row g-3 align-items-center">
+                        <div class="form-control">
+                            <h2>Profile Information</h2>
+                    
+                            <!-- First Name -->
+                            <div class="form-group">
+                                <label for="{{ profile_form.first_name.id_for_label }}">First Name:</label>
+                                {{ profile_form.first_name }}
+                            </div>
+                    
+                            <!-- Last Name -->
+                            <div class="form-group">
+                                <label for="{{ profile_form.last_name.id_for_label }}">Last Name:</label>
+                                {{ profile_form.last_name }}
+                            </div>
+                    
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="{{ profile_form.email.id_for_label }}">Email:</label>
+                                {{ profile_form.email }}
+                            </div>
+                    
+                            <!-- Bio -->
+                            <div class="form-group">
+                                <label for="{{ profile_form.bio.id_for_label }}">Bio:</label>
+                                {{ profile_form.bio }}
+                            </div>
+                    
+                            <!-- Display errors if there are any -->
+                            {% if profile_form.errors %}
+                                <div class="errors">
+                                    <h2>Profile Form Errors:</h2>
+                                    {{ profile_form.errors.as_ul }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
 
-            <!-- Render profile form fields here -->
-            <div>
-                {{ profile_form.as_p }}
+
+                            <!-- Contact Section -->
+            <div class="row g-3 align-items-center" style="margin-top: 30px;">
+                <div class="form-control">
+                    <h2>Contact</h2>
+                    {{ contact_info_form.as_p }}
+                    {% if contact_info_form.errors %}
+                        <div class="errors">
+                            <h2>Contact Form Errors:</h2>
+                            {{ contact_info_form.errors.as_ul }}
+                        </div>
+                    {% endif %}
+            </div>
             </div>
 
-            {% if profile_form.errors %}
-                <div class="errors">
-                    <h2>Profile Form Errors:</h2>
-                    {{ profile_form.errors.as_ul }}
-                </div>
-            {% endif %}
-        </div>
 
-        <!-- CV Section -->
-        <!-- <div>
-            <h2>CV</h2>
-            <div>
-                {{ cv_form.as_p }}
-            </div>
+                            <!-- Work Experience Section -->
 
-            {% if cv_form.errors %}
-                <div class="errors">
-                    <h2>CV Form Errors:</h2>
-                    {{ cv_form.errors.as_ul }}
-                </div>
-            {% endif %}
-        </div> -->
-
-        <!-- Contact Section -->
-        <div></div>
-            <h2>Contact</h2>
-            {{ contact_form.as_p }}
-            {% if contact_form.errors %}
-                <div class="errors">
-                    <h2>Contact Form Errors:</h2>
-                    {{ contact_form.errors.as_ul }}
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Work Experience Section -->
-        <div>
-            <h2>Work Experience</h2>
             {{ work_experience_formset.management_form }}
-            {% for form in work_experience_formset %}
-                <div class="work-experience-form">
-                    {{ form.as_p }}
-                    {% if form.instance.pk %}
-                        <!-- Checkbox for deleting work experience -->
-                        <label for="{{ form.DELETE.id_for_label }}">Delete this experience:</label>
-                        {{ form.DELETE }}
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p>No work experiences added yet. Add your first experience below.</p>
-            {% endfor %}
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Work Experience</h1>
+        
+                    {% for form in work_experience_formset %}
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p }}
+                        </div>
+                        
+                    {% endfor %}
+            </div>
+            
 
-            {% if work_experience_formset.errors %}
-                <div class="errors">
-                    <h2>Work Experience Form Errors:</h2>
-                    {{ work_experience_formset.errors.as_ul }}
-                </div>
-            {% endif %}
-        </div>
 
-        <!-- Education History Section -->
-        <div>
-            <h2>Education History</h2>
-            {{ education_history_formset.management_form }}
-            {% for form in education_history_formset %}
-                <div class="education-form">
-                    {{ form.as_p }}
-                    {% if form.instance.pk %}
-                        <!-- Checkbox for deleting education history -->
-                        <label for="{{ form.DELETE.id_for_label }}">Delete this education:</label>
-                        {{ form.DELETE }}
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p>No education history added yet. Add your first entry below.</p>
-            {% endfor %}
 
-            {% if education_history_formset.errors %}
-                <div class="errors">
-                    <h2>Education History Form Errors:</h2>
-                    {{ education_history_formset.errors.as_ul }}
-                </div>
-            {% endif %}
-        </div>
 
-        <!-- Skills Section -->
-        <div>
-            <h2>Skills</h2>
+                            <!-- Education Section -->
+            {{ education_formset.management_form }}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Education</h1>
+        
+                    {% for form in education_formset %}
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+
+
+
+                            <!-- Projects Section -->
+            {{ project_formset.management_form }}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Projects</h1>
+                    <div>
+                        {% for form in project_formset %}
+                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                {{ form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+
+
+                            <!-- Skills Section -->
             {{ skills_formset.management_form }}
-            {% for form in skills_formset %}
-                <div class="'skills-form">
-                    {{ form.as_p }}
-                    {% if form.instance.pk %}
-                        <label for="{{ form.DELETE.id_for_label }}">Delete this skill:</label>
-                    {{  form.DELETE }}
-                    {% endif %}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Skills</h1>
+        
+                    {% for form in skills_formset %}
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p}}
+                        </div>
+                    {% endfor %}
                 </div>
-            {% empty %}
-                <p>No skills added yet. Add your first skill below.</p>
-            {% endfor %}
+            </div>
+            
 
-            {% if skill_list_formset.errors %}
-                <div class="errors">
-                    <h2>Skills Form Errors:</h2>
-                    {{ skill_list_formset.errors.as_ul }}
+
+                            <!-- Languages Section -->
+            {{ language_formset.management_form }}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Languages</h1>
+        
+                    {% for form in language_formset %} 
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endif %}
-        </div>
+            </div>
+            
 
-        <button type="submit">Save</button>
-    </form>
 
-    <a href="{% url 'candidate_dashboard' %}">Back to Dashboard</a>
-</body>
-</html>
+                            <!-- References Section -->
+
+            {{ reference_formset.management_form }}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit References</h1>
+        
+                    {% for form in reference_formset %}
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+
+
+
+                            <!-- Additional Information Section -->
+            {{ additional_info_formset.management_form }}
+
+            <div class="row g-3 align-items-center" style="margin-top: 40px;">
+                <div class="form-control">
+                    <h1>Edit Additional Information</h1>
+        
+                    {% for form in additional_info_formset %}
+                        <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            
+
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+            
+
+        </form>
+
+        <a href="{% url 'candidate_dashboard' %}">Back to Dashboard</a>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
 
 
 

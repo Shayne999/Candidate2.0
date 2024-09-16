@@ -1,22 +1,13 @@
 from django import forms
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects
+
 
 class CVForm(forms.ModelForm):
     class Meta:
         model = CV
         fields = [
-            'certifications',
-            'projects',
-            'languages',
-            'awards',
-            'publications',
-            'interests',
-            'references',
-            'additional_info',
+            
         ]
-
-
-#==============Contact Form===================
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -26,8 +17,12 @@ class ContactForm(forms.ModelForm):
             'email'
         ]
 
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
-#==============Work Experience Form==================
+
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
@@ -41,77 +36,174 @@ class WorkExperienceForm(forms.ModelForm):
 
         # creates a date input widget
         widgets = {
+            'position': forms.TextInput(attrs={'class': 'form-control'}),
+            'company': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4})
             }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
-# formset that allows multiple instances of WorkExperienceForm
-WorkExperienceFormSet = forms.inlineformset_factory(
-    CV,
-    WorkExperience,
-    form=WorkExperienceForm,
-    extra=1,
-    can_delete=True
-)
-
-
-#==============Education Form==================
 
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
         fields = [
             'institution',
-            'degree',
+            'qualification',
             'start_date',
             'end_date',
         ]
 
         # creates a date input widget
         widgets = {
+            'institution': forms.TextInput(attrs={'class': 'form-control'}),
+            'qualification': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
             }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-# Education formset allows multiple instances of EducationForm
-EducationFormSet = forms.inlineformset_factory(
-    CV,
-    Education,
-    form=EducationForm,
-    extra=1,
-    can_delete=True
-)
+class ReferencesForm(forms.ModelForm):
+    class Meta:
+        model = References
+        fields = [
+            'name',
+            'company',
+            'position',
+            'email',
+            'phone_number',
+        ]
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'company': forms.TextInput(attrs={'class': 'form-control'}),
+            'position': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-# =================Skills Form=====================
 class SkillsForm(forms.ModelForm):
     class Meta:
         model = Skills
         fields = ['skill']
 
+        widgets = {
+            'skill': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
-# formset that allows multiple instances of SkillsForm
-SkillsFormSet = forms.inlineformset_factory(
-    CV,
-    Skills,
-    form=SkillsForm,
-    extra=1,
-    can_delete=True
-)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
 
 
-#==============Candidate Profile Form==================
+class LanguagesForm(forms.ModelForm):
+    class Meta:
+        model = Languages
+        fields = ['language']
+
+        widgets = {
+            'language': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
+
+class ProjectsForm(forms.ModelForm):
+    class Meta:
+        model = Projects
+        fields = ['name', 'link', 'description']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'link': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
+
+class AdditionalInfoForm(forms.ModelForm):
+    class Meta:
+        model = AdditionaleInformation
+        fields = ['additional_information']
+
+        widgets = {
+            'additional_information': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all fields as not required
+        for field in self.fields.values():
+            field.required = False
+
 
 class CandidateProfileForm(forms.ModelForm):
     # Adding fields for first and last name
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
-    email = forms.EmailField(required=True)
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'First Name'
+        })
+    )
+
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Last Name'
+        })
+    )
+
+    email = forms.EmailField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email'
+        })
+    )
     
     class Meta:
         model = CandidateProfile
         fields = ['profile_picture', 'bio']
+
+        widgets = {
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+
 
     def __init__(self, *args, **kwargs):
         # Extract the user instance
