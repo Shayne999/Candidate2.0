@@ -122,7 +122,11 @@ def handle_education_formset(cv, post_data=None):
         CV,
         Education,
         form=EducationForm,
+<<<<<<< HEAD
         fields=['institution', 'qualification', 'start_date', 'end_date'],
+=======
+        fields=['institution', 'degree', 'start_date', 'end_date'],
+>>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
         extra=1,
         can_delete=True
     )
@@ -324,6 +328,21 @@ def edit_cv(request):
 
 
 
+<<<<<<< HEAD
+=======
+
+#==========================================================================================
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
 # ================recruiter dashboard===============
 def recruiter_dashboard(request):
 
