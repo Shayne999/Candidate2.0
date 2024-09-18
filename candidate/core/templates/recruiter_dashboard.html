@@ -55,22 +55,31 @@
     {% if candidates %}
     <div class="candidates-container">
         {% for candidate in candidates %}
-            
-        <a href="{% url 'candidate_cv' candidate.id %}" style="text-decoration: none; color: inherit;">
-            <div class="candidate-card d-flex flex-column align-items-center" style="width: 300px; margin: 50px">
-                <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 250px; height: 250px; display: block; margin-bottom: 10px;">
-                <h3 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 20px; text-align: center;">{{ candidate.user.get_full_name }}</h3>
-                <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Field: {{ candidate.cv.field }}</p>
-                <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience: {{ candidate.cv.experience }} years</p>
-            </div>
-        </a>
-        
-        
+            <a href="{% url 'candidate_cv' candidate.id %}" style="text-decoration: none; color: inherit;">
+                <div class="candidate-card d-flex flex-column align-items-center" style="width: 300px; margin: 50px">
+                    <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 250px; height: 250px; display: block; margin-bottom: 10px;">
+                    <h3 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 20px; text-align: center;">{{ candidate.user.get_full_name }}</h3>
+
+                    {% if candidate.cv.career.exists %}
+                        {% for career in candidate.cv.career.all %}
+                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Field: {{ career.field }}</p>
+                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience: {{ career.experience_in_years }} years</p>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">No career field data available</p>
+                    {% endif %}
+
+                </div>
+            </a>
         {% endfor %}
     </div>
-    {% else %}
-        <p>No candidates</p>
-    {% endif %}
+{% else %}
+    <p>No candidates</p>
+{% endif %}
+
+
+
+
 
         
 

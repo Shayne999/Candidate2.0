@@ -9,6 +9,7 @@ from django.contrib  import messages
 from django.db import IntegrityError, OperationalError
 from django.forms import inlineformset_factory
 from .filters import CareerFilter
+from django.db.models import Prefetch
 
 User = get_user_model()
 
@@ -340,7 +341,9 @@ def recruiter_dashboard(request):
 
     """This method renders the recruiter dashboard with candidate cards."""
 
-    candidates = CandidateProfile.objects.all()
+    candidates = CandidateProfile.objects.prefetch_related(
+        'cv__career'  # Access the 'career' related name defined in Career model
+    )
     
 
 
