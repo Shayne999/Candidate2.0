@@ -24,7 +24,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top; margin-bottom: 50px">
         <div class="container-fluid">
             <!-- Logout Form -->
             <form method="POST" action="{% url 'logout' %}" class="d-inline">
@@ -50,33 +50,95 @@
     </nav>
     
 
-    <h1 style="padding-top: 50px;">Recruiter Dashboard</h1>
+    <!-- <h1 style="padding-top: 50px;">Recruiter Dashboard</h1> -->
 
     {% if candidates %}
-    <div class="candidates-container">
-        {% for candidate in candidates %}
-            <a href="{% url 'candidate_cv' candidate.id %}" style="text-decoration: none; color: inherit;">
-                <div class="candidate-card d-flex flex-column align-items-center" style="width: 300px; margin: 50px">
-                    <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 250px; height: 250px; display: block; margin-bottom: 10px;">
-                    <h3 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 20px; text-align: center;">{{ candidate.user.get_full_name }}</h3>
+    <div class="container" style="padding-top: 50px;">
+        <div class="row">
+            {% for candidate in candidates %}
+                <div class="col-md-3 mb-4"> <!-- Adjust the column width to fit 4 cards per row -->
+                    <a href="{% url 'candidate_cv' candidate.id %}" style="text-decoration: none; color: inherit;">
+                        <div class="candidate-card d-flex flex-column align-items-center" style="width: 100%; margin: 0;">
+                            <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 250px; height: 250px; display: block; margin-bottom: 10px; border-radius: 6px;">
+                            <h3 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 20px; text-align: center;">{{ candidate.user.get_full_name }}</h3>
 
-                    {% if candidate.cv.career.exists %}
-                        {% for career in candidate.cv.career.all %}
-                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Field: {{ career.field }}</p>
-                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience: {{ career.experience_in_years }} years</p>
-                        {% endfor %}
-                    {% else %}
-                        <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">No career field data available</p>
-                    {% endif %}
-
+                            {% if candidate.cv.career.exists %}
+                                {% for career in candidate.cv.career.all %}
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Field: {{ career.field }}</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience: {{ career.experience_in_years }} years</p>
+                                {% endfor %}
+                            {% else %}
+                                <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">No career field data available</p>
+                            {% endif %}
+                        </div>
+                    </a>
                 </div>
-            </a>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% else %}
-    <p>No candidates</p>
+    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 600; text-align: center; padding-top: 150px;">No candidates</p>
 {% endif %}
 
+<!-- Pagination controls -->
+<nav style="margin-top: 20px;">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+    <footer style="position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; text-align: center;">
+        <p>&copy; Candidate 2024</p>
+    </footer>
 
 
 

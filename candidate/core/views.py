@@ -10,6 +10,7 @@ from django.db import IntegrityError, OperationalError
 from django.forms import inlineformset_factory
 from .filters import CareerFilter
 from django.db.models import Prefetch
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 User = get_user_model()
 
@@ -338,22 +339,29 @@ def edit_cv(request):
 
 # ================recruiter dashboard===============
 def recruiter_dashboard(request):
-
     """This method renders the recruiter dashboard with candidate cards."""
 
-    candidates = CandidateProfile.objects.prefetch_related(
-        'cv__career'  # Access the 'career' related name defined in Career model
-    )
-    
-
+    candidates = CandidateProfile.objects.prefetch_related('cv__career')
 
     myFilter = CareerFilter(request.GET, queryset=candidates)
     candidates = myFilter.qs
+
+    # Paginate candidates
+    paginator = Paginator(candidates, 4)  # Show 12 candidates per page
+    page = request.GET.get('page')
     
+    try:
+        candidates = paginator.page(page)
+    except PageNotAnInteger:
+        candidates = paginator.page(1)
+    except EmptyPage:
+        candidates = paginator.page(paginator.num_pages)
 
     context = {
         'candidates': candidates,
-        'myFilter': myFilter
+        'myFilter': myFilter,
+        'paginator': paginator,
+        'page_obj': candidates,
     }
 
     return render(request, 'recruiter_dashboard.html', context)
