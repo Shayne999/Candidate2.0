@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import get_user_model
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects
-from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm, LanguagesForm, ReferencesForm, AdditionalInfoForm, ProjectsForm
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
+from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm, LanguagesForm, ReferencesForm, AdditionalInfoForm, ProjectsForm, CareerForm
 from django.contrib.auth.decorators import login_required
 from django.contrib  import messages
 from django.db import IntegrityError, OperationalError
 from django.forms import inlineformset_factory
+from .filters import CareerFilter
 
 User = get_user_model()
 
@@ -95,6 +96,7 @@ def candidate_dashboard(request):
     reference_list = References.objects.filter(cv=cv)
     additional_info = AdditionaleInformation.objects.filter(cv=cv)
     project_list = Projects.objects.filter(cv=cv)
+    career_field = Career.objects.filter(cv=cv).first()
     
 
     context = {
@@ -107,7 +109,8 @@ def candidate_dashboard(request):
         'language_list': language_list,
         'reference_list': reference_list,
         'additional_info': additional_info,
-        'project_list': project_list
+        'project_list': project_list,
+        'career_field': career_field
     }
     return render(request, 'candidate_dashboard.html', context)
 
@@ -122,11 +125,7 @@ def handle_education_formset(cv, post_data=None):
         CV,
         Education,
         form=EducationForm,
-<<<<<<< HEAD
         fields=['institution', 'qualification', 'start_date', 'end_date'],
-=======
-        fields=['institution', 'degree', 'start_date', 'end_date'],
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
         extra=1,
         can_delete=True
     )
@@ -243,6 +242,7 @@ def edit_cv(request):
     profile = get_object_or_404(CandidateProfile, user=request.user)
     cv, created = CV.objects.get_or_create(candidate=profile)
     contact, contact_created = Contact.objects.get_or_create(cv=cv)
+    career_field, career_field_created = Career.objects.get_or_create(cv=cv)
 
 
     if request.method == 'POST':
@@ -250,6 +250,8 @@ def edit_cv(request):
         cv_form = CVForm(request.POST, instance=cv)
         profile_form = CandidateProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
         contact_info_form = ContactForm(request.POST, instance=contact)
+        career_field_form = CareerForm(request.POST, instance=career_field)
+
 
         education_formset = handle_education_formset(cv, request.POST)
         work_experience_formset = handle_work_experience_formset(cv, request.POST)
@@ -264,12 +266,13 @@ def edit_cv(request):
         if all([cv_form.is_valid(), profile_form.is_valid(), contact_info_form.is_valid(),
                 education_formset.is_valid(), work_experience_formset.is_valid(),skills_formset.is_valid(),
                 language_formset.is_valid(), reference_formset.is_valid(), additional_info_formset.is_valid(),
-                project_formset.is_valid()]):
+                project_formset.is_valid(), career_field_form.is_valid()]):
 
             # Save the forms and formsets
             cv_form.save()
             profile_form.save()
             contact_info_form.save()
+            career_field_form.save()
 
             education_formset.save()
             work_experience_formset.save()
@@ -281,7 +284,7 @@ def edit_cv(request):
 
 
             messages.success(request, 'Your CV has been updated successfully!')
-            return redirect('candidate_dashboard')
+            return redirect('edit_cv')
         else:
 
             # Print individual form validation errors for debugging
@@ -293,12 +296,14 @@ def edit_cv(request):
                 print("Contact Form errors:", contact_info_form.errors)
 
             messages.error(request, 'Please correct the errors below.')
+            return redirect('edit_cv')
 
     else:
         # Initialize forms and formsets for GET requests
         cv_form = CVForm(instance=cv)
         profile_form = CandidateProfileForm(instance=profile, user=request.user)
         contact_info_form = ContactForm(instance=contact)
+        career_field_form = CareerForm(instance=career_field)
 
 
         education_formset = handle_education_formset(cv)
@@ -320,7 +325,9 @@ def edit_cv(request):
         'language_formset': language_formset,
         'reference_formset': reference_formset,
         'additional_info_formset': additional_info_formset,
-        'project_formset': project_formset
+        'project_formset': project_formset,
+        'career_field_form': career_field_form,
+        'show_messages': True
     })
 
 
@@ -328,30 +335,22 @@ def edit_cv(request):
 
 
 
-<<<<<<< HEAD
-=======
-
-#==========================================================================================
-
-
-
-
-
-
-
-
-
-
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
 # ================recruiter dashboard===============
 def recruiter_dashboard(request):
 
     """This method renders the recruiter dashboard with candidate cards."""
 
-    candidates = CandidateProfile.objects.all
+    candidates = CandidateProfile.objects.all()
+    
+
+
+    myFilter = CareerFilter(request.GET, queryset=candidates)
+    candidates = myFilter.qs
+    
 
     context = {
-        'candidates': candidates
+        'candidates': candidates,
+        'myFilter': myFilter
     }
 
     return render(request, 'recruiter_dashboard.html', context)
@@ -371,6 +370,7 @@ def candidate_cv(request, candidate_id):
     reference_list = References.objects.filter(cv=cv) if cv else []
     additional_info = AdditionaleInformation.objects.filter(cv=cv) if cv else []
     project_list = Projects.objects.filter(cv=cv) if cv else []
+    career_field = Career.objects.filter(cv=cv).first()
 
 
     context = {
@@ -383,7 +383,8 @@ def candidate_cv(request, candidate_id):
         'languages_list': languages_list,
         'reference_list': reference_list,
         'additional_info': additional_info,
-        'project_list': project_list
+        'project_list': project_list,
+        'career_field': career_field
 
         
     }

@@ -1,5 +1,5 @@
 from django import forms
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects
+from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
 
 
 class CVForm(forms.ModelForm):
@@ -86,7 +86,6 @@ class ReferencesForm(forms.ModelForm):
             'phone_number',
         ]
 
-<<<<<<< HEAD
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'company': forms.TextInput(attrs={'class': 'form-control'}),
@@ -95,8 +94,6 @@ class ReferencesForm(forms.ModelForm):
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-=======
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all fields as not required
@@ -109,13 +106,10 @@ class SkillsForm(forms.ModelForm):
         model = Skills
         fields = ['skill']
 
-<<<<<<< HEAD
         widgets = {
             'skill': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-=======
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all fields as not required
@@ -128,13 +122,10 @@ class LanguagesForm(forms.ModelForm):
         model = Languages
         fields = ['language']
 
-<<<<<<< HEAD
         widgets = {
             'language': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-=======
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all fields as not required
@@ -147,15 +138,12 @@ class ProjectsForm(forms.ModelForm):
         model = Projects
         fields = ['name', 'link', 'description']
 
-<<<<<<< HEAD
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'link': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
 
-=======
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all fields as not required
@@ -168,18 +156,28 @@ class AdditionalInfoForm(forms.ModelForm):
         model = AdditionaleInformation
         fields = ['additional_information']
 
-<<<<<<< HEAD
         widgets = {
             'additional_information': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
 
-=======
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all fields as not required
         for field in self.fields.values():
             field.required = False
+
+
+class CareerForm(forms.ModelForm):
+    class Meta:
+        model = Career
+        fields = ['field', 'experience_in_years']
+
+        widgets = {
+            'field': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Plumber'}),
+            'experience_in_years': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '5'}),
+        }
+
+
 
 
 class CandidateProfileForm(forms.ModelForm):

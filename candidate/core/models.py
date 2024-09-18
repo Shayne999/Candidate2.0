@@ -75,11 +75,7 @@ class WorkExperience(models.Model):
 class Education(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='education')
     institution = models.CharField(max_length=200, blank=True, null=True)
-<<<<<<< HEAD
     qualification = models.CharField(max_length=300, blank=True, null=True)
-=======
-    degree = models.CharField(max_length=300, blank=True, null=True)
->>>>>>> 8bb5bfbab419bd4b68356844b43db18eaa7e42f1
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
@@ -142,3 +138,10 @@ class RecruiterProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+class Career(models.Model):
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='career')
+    field = models.CharField(max_length=100, blank=True, null=True)
+    experience_in_years = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.field

@@ -1,49 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-</head>
-<body>
-    <h2>Sign Up</h2>
+{% extends 'base.html' %}
 
-    <!-- Display messages if any -->
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: red;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+{% load static %}
 
-    <form method="POST" action="{% url 'signup' %}">
-        {% csrf_token %}
-        
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required><br><br>
+{% block content %}
 
-        <label for="first_name">First Name:</label>
-        <input type="text" name="first_name" id="first_name" required><br><br>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card p-5 shadow" style="width: 400px;">
+        <h2 class="text-center mb-4">Sign Up</h2>
 
-        <label for="last_name">Last Name:</label>
-        <input type="text" name="last_name" id="last_name" required><br><br>
+        <!-- Display messages if any -->
+        {% if messages %}
+            <ul class="mb-4">
+                {% for message in messages %}
+                    <li class="text-danger">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required><br><br>
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required><br><br>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
 
-        <label for="user_type">User Type:</label>
-        <select name="user_type" id="user_type" required>
-            <option value="candidate">Candidate</option>
-            <option value="recruiter">Recruiter</option>
-        </select><br><br>
+            <div class="mb-3">
+                <label for="first_name" class="form-label">First Name:</label>
+                <input type="text" name="first_name" id="first_name" class="form-control" required>
+            </div>
 
-        <button type="submit">Sign Up</button>
-    </form>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name:</label>
+                <input type="text" name="last_name" id="last_name" class="form-control" required>
+            </div>
 
-    <p>Already have an account? <a href="{% url 'index' %}">Login here</a>.</p>
-</body>
-</html>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="email@example.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="user_type" class="form-label">User Type:</label>
+                <select name="user_type" id="user_type" class="form-control" required>
+                    <option value="candidate">Candidate</option>
+                    <option value="recruiter">Recruiter</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Sign Up</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Already have an account? <a href="{% url 'index' %}">Login here</a>.
+        </p>
+    </div>
+</div>
+
+{% endblock %}
+
 
