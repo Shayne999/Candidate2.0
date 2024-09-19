@@ -27,7 +27,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top; margin-bottom: 50px">
         <div class="container-fluid">
 
-            <!-- Logout Form -->
+            <!-- Logout -->
             <form method="POST" action="{% url 'logout' %}" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-outline-success" style="margin-right: 10px;">Logout</button>
@@ -39,7 +39,7 @@
                     <button type="submit" class="btn btn-outline-success">Delete Account</button>
                 </form>
     
-            <!-- Filter Form -->
+            <!-- Search Filter Form -->
             <form method="GET" class="d-flex ms-auto" role="search">
                 <!-- Field Filter -->
                 <div class="me-2">
@@ -57,13 +57,12 @@
     </nav>
     
 
-    <!-- <h1 style="padding-top: 50px;">Recruiter Dashboard</h1> -->
 
     {% if candidates %}
     <div class="container" style="padding-top: 50px;">
         <div class="row">
             {% for candidate in candidates %}
-                <div class="col-md-3 mb-4"> <!-- Adjust the column width to fit 4 cards per row -->
+                <div class="col-md-3 mb-4"> <!-- 4 cards per row-->
                     <a href="{% url 'candidate_cv' candidate.id %}" style="text-decoration: none; color: inherit;">
                         <div class="candidate-card d-flex flex-column align-items-center" style="width: 100%; margin: 0;">
                             <img src="{% if candidate.profile_picture %}{{ candidate.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" alt="Profile Picture" style="width: 250px; height: 250px; display: block; margin-bottom: 10px; border-radius: 6px;">
@@ -83,64 +82,64 @@
             {% endfor %}
         </div>
     </div>
-{% else %}
-    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 600; text-align: center; padding-top: 150px;">No candidates</p>
-{% endif %}
+    {% else %}
+        <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 600; text-align: center; padding-top: 150px;">No candidates</p>
+    {% endif %}
 
-<!-- Pagination controls -->
-<nav style="margin-top: 20px;">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="First">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </span>
-            </li>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <li class="page-item active" aria-current="page">
-                    <span class="page-link">{{ num }}</span>
+    <!-- Pagination controls -->
+    <nav style="margin-top: 20px;">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
             {% else %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </span>
                 </li>
             {% endif %}
-        {% endfor %}
 
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </span>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 
 
     

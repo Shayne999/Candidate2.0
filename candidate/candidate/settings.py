@@ -78,12 +78,12 @@ WSGI_APPLICATION = 'candidate.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'candidate_db_2',  # Replace with your database name
-        'USER': 'postgres',      # Replace with your database user
-        'PASSWORD': 'Iamjmagnus!',  # Replace with your database password
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': '********',
+        'NAME': '*******',
+        'USER': '******',
+        'PASSWORD': '*******',
+        'HOST': '******',
+        'PORT': '******',
     }
 }
 

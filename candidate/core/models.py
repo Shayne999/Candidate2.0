@@ -48,7 +48,6 @@ class CV(models.Model):
         return f"{self.candidate.user.username}'s CV"
 
 
-#contact model
 class Contact(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='contact')
     phone_number = models.CharField(max_length=20)
@@ -58,7 +57,6 @@ class Contact(models.Model):
         return f"{self.phone_number} at {self.email}"
 
 
-# work experience model
 class WorkExperience(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='work_experience')
     position = models.CharField(max_length=100, blank=True, null=True)
@@ -71,7 +69,6 @@ class WorkExperience(models.Model):
         return f"{self.position} at {self.company}"
 
 
-# education model
 class Education(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='education')
     institution = models.CharField(max_length=200, blank=True, null=True)
@@ -83,7 +80,6 @@ class Education(models.Model):
         return f"{self.qualification} at {self.institution}"
     
 
-# skills model
 class Skills(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='skills')
     skill = models.CharField(max_length=100, blank=True, null=True)
@@ -92,7 +88,6 @@ class Skills(models.Model):
         return self.skill
 
 
-# languages model
 class Languages(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='languages')
     language = models.CharField(max_length=100, blank=True, null=True)
@@ -101,7 +96,6 @@ class Languages(models.Model):
         return self.language
     
 
-# references model
 class References(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='references')
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -114,7 +108,6 @@ class References(models.Model):
         return f"{self.name} at {self.company}"
 
 
-#projects model
 class Projects(models.Model):
     cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='projects')
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -122,7 +115,6 @@ class Projects(models.Model):
     description = models.TextField(blank=True, null=True)
 
 
-# additional info model
 class AdditionaleInformation(models.Model):
     cv= models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='additional_info')
     additional_information = models.TextField(blank=True, null=True)
@@ -131,7 +123,6 @@ class AdditionaleInformation(models.Model):
         return self.additional_information
 
 
-# Recruiter model
 class RecruiterProfile(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name='recruiter_profile')
 

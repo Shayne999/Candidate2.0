@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import User, CandidateProfile, CV, RecruiterProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
-
+# from .models import User, CandidateProfile, CV, RecruiterProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
+from .models import *
 # Register your models here.
 
 admin.site.register(User)

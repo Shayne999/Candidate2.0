@@ -1,5 +1,6 @@
 from django import forms
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
+# from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
+from .models import *
 
 
 class CVForm(forms.ModelForm):
@@ -34,7 +35,6 @@ class WorkExperienceForm(forms.ModelForm):
             'description',
         ]
 
-        # creates a date input widget
         widgets = {
             'position': forms.TextInput(attrs={'class': 'form-control'}),
             'company': forms.TextInput(attrs={'class': 'form-control'}),
@@ -60,7 +60,6 @@ class EducationForm(forms.ModelForm):
             'end_date',
         ]
 
-        # creates a date input widget
         widgets = {
             'institution': forms.TextInput(attrs={'class': 'form-control'}),
             'qualification': forms.TextInput(attrs={'class': 'form-control'}),
@@ -176,8 +175,6 @@ class CareerForm(forms.ModelForm):
             'field': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Plumber'}),
             'experience_in_years': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '5'}),
         }
-
-
 
 
 class CandidateProfileForm(forms.ModelForm):

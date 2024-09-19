@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import get_user_model
-from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
-from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm, LanguagesForm, ReferencesForm, AdditionalInfoForm, ProjectsForm, CareerForm
+# from .models import CV, CandidateProfile, WorkExperience, Education, Contact, Skills, Languages, References, AdditionaleInformation, Projects, Career
+from .models import *
+# from .forms import CVForm, CandidateProfileForm, WorkExperienceForm, EducationForm, ContactForm, SkillsForm, LanguagesForm, ReferencesForm, AdditionalInfoForm, ProjectsForm, CareerForm
+from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib  import messages
 from django.db import IntegrityError, OperationalError
@@ -15,8 +17,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 User = get_user_model()
 
 
-# sign in view
 def index(request):
+    """This method is the Candidate point of entry"""
+
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -42,6 +45,8 @@ def index(request):
 
 # sign up view
 def signup(request):
+    """Handles user sign up logic and saves the user profile on the database"""
+
     if request.method == 'POST':
         username = request.POST['username']
         first_name = request.POST['first_name']
@@ -121,7 +126,7 @@ def candidate_dashboard(request):
 
 # ===================================edit candidate's CV===================================
 
-# ==========formsets==========
+# ==========CV formsets==========
 
 def handle_education_formset(cv, post_data=None):
     EducationFormSet = inlineformset_factory(
@@ -292,12 +297,12 @@ def edit_cv(request):
         else:
 
             # Print individual form validation errors for debugging
-            if not cv_form.is_valid():
-                print("CV Form errors:", cv_form.errors)
-            if not profile_form.is_valid():
-                print("Profile Form errors:", profile_form.errors)
-            if not contact_info_form.is_valid():
-                print("Contact Form errors:", contact_info_form.errors)
+            # if not cv_form.is_valid():
+            #     print("CV Form errors:", cv_form.errors)
+            # if not profile_form.is_valid():
+            #     print("Profile Form errors:", profile_form.errors)
+            # if not contact_info_form.is_valid():
+            #     print("Contact Form errors:", contact_info_form.errors)
 
             messages.error(request, 'Please correct the errors below.')
             return redirect('edit_cv')
@@ -339,7 +344,6 @@ def edit_cv(request):
 
 
 
-# ================recruiter dashboard===============
 
 @login_required
 def recruiter_dashboard(request):
@@ -350,7 +354,6 @@ def recruiter_dashboard(request):
     myFilter = CareerFilter(request.GET, queryset=candidates)
     candidates = myFilter.qs
 
-    # Paginate candidates
     paginator = Paginator(candidates, 4)  # Show 12 candidates per page
     page = request.GET.get('page')
     
@@ -371,7 +374,7 @@ def recruiter_dashboard(request):
     return render(request, 'recruiter_dashboard.html', context)
 
 
-# candidate cv view
+
 @login_required
 def candidate_cv(request, candidate_id):
     """This method displays the user's cv"""
@@ -407,7 +410,7 @@ def candidate_cv(request, candidate_id):
     return render(request, 'candidate_cv.html', context)
 
 
-# logout view
+
 @login_required
 def logout(request):
     auth.logout(request)
@@ -418,9 +421,7 @@ def logout(request):
 def delete_profile_view(request):
     if request.method == 'POST':
         user = request.user
-        # Delete the user profile
         user.delete()
         messages.success(request, 'Your account has been deleted successfully.')
-        return redirect('index')  # Redirect to the login page
-    # Handle GET requests (optional)
+        return redirect('index')
     return redirect('profile')
