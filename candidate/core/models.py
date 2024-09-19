@@ -50,7 +50,7 @@ class CV(models.Model):
 
 #contact model
 class Contact(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='contact')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='contact')
     phone_number = models.CharField(max_length=20)
     email = models.EmailField()
 
@@ -60,7 +60,7 @@ class Contact(models.Model):
 
 # work experience model
 class WorkExperience(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='work_experience')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='work_experience')
     position = models.CharField(max_length=100, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -73,7 +73,7 @@ class WorkExperience(models.Model):
 
 # education model
 class Education(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='education')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='education')
     institution = models.CharField(max_length=200, blank=True, null=True)
     qualification = models.CharField(max_length=300, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -85,7 +85,7 @@ class Education(models.Model):
 
 # skills model
 class Skills(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='skills')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='skills')
     skill = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
@@ -94,7 +94,7 @@ class Skills(models.Model):
 
 # languages model
 class Languages(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='languages')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='languages')
     language = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
@@ -103,7 +103,7 @@ class Languages(models.Model):
 
 # references model
 class References(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='references')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='references')
     name = models.CharField(max_length=100, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
     position = models.CharField(max_length=100, blank=True, null=True)
@@ -116,7 +116,7 @@ class References(models.Model):
 
 #projects model
 class Projects(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='projects')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='projects')
     name = models.CharField(max_length=100, blank=True, null=True)
     link = models.URLField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -124,7 +124,7 @@ class Projects(models.Model):
 
 # additional info model
 class AdditionaleInformation(models.Model):
-    cv= models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='additional_info')
+    cv= models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='additional_info')
     additional_information = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -133,13 +133,13 @@ class AdditionaleInformation(models.Model):
 
 # Recruiter model
 class RecruiterProfile(models.Model):
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='recruiter_profile')
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name='recruiter_profile')
 
     def __str__(self):
         return self.user.username
 
 class Career(models.Model):
-    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.SET_NULL, related_name='career')
+    cv = models.ForeignKey('CV', null=True, blank=True, on_delete=models.CASCADE, related_name='career')
     field = models.CharField(max_length=100, blank=True, null=True)
     experience_in_years = models.IntegerField(blank=True, null=True)
 

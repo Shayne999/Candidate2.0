@@ -13,6 +13,7 @@ urlpatterns = [
     path('edit_cv/', views.edit_cv, name='edit_cv'),
     path('candidate_cv/<int:candidate_id>/', views.candidate_cv, name='candidate_cv'),
     path('logout/', views.logout, name='logout'),
+    path('delete_profile/', views.delete_profile_view, name='delete_profile'),
 ]
 
 if settings.DEBUG:

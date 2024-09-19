@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+ {% block title %} {{ profile.user.first_name }} {{ profile.user.last_name }}'s CV {% endblock %}
+
 {% load static %}
 
 {% block content %}
@@ -45,9 +47,11 @@
                         <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Profile</h2>
                         <div>
                             <!-- Profile Image -->
-                            <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" 
-                                alt="Profile Picture" style="width: 150px; height: 150px; display: block;">
-                        
+                            <a href="{{ profile.profile_picture.url }}">
+                                <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}" 
+                                    alt="Profile Picture" style="width: 150px; height: 150px; display: block;">
+                            </a>
+                            
                             <!-- File Input for changing profile picture -->
                             <input type="file" name="profile_picture" id="profile_picture" style="display: block; margin-top: 10px; margin-bottom: 20px;">
                         </div>

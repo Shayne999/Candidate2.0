@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Candidate Recruiter Dashboard</title>
 
 
     <link rel="stylesheet" type="text/css" href="{% static 'styles/recruiter_dashboard.css' %}">
@@ -26,11 +26,18 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top; margin-bottom: 50px">
         <div class="container-fluid">
+
             <!-- Logout Form -->
             <form method="POST" action="{% url 'logout' %}" class="d-inline">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-success">Logout</button>
+                <button type="submit" class="btn btn-outline-success" style="margin-right: 10px;">Logout</button>
             </form>
+
+            <div class="d-flex justify-start"></div>
+                <form action="{% url 'delete_profile' %}" method="post" style="text-decoration: none; color: inherit;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success">Delete Account</button>
+                </form>
     
             <!-- Filter Form -->
             <form method="GET" class="d-flex ms-auto" role="search">
@@ -64,8 +71,8 @@
 
                             {% if candidate.cv.career.exists %}
                                 {% for career in candidate.cv.career.all %}
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Field: {{ career.field }}</p>
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience: {{ career.experience_in_years }} years</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Career - {{ career.field }}</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">Experience - {{ career.experience_in_years }} years</p>
                                 {% endfor %}
                             {% else %}
                                 <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200; text-align: center;">No career field data available</p>
@@ -136,9 +143,7 @@
 </nav>
 
 
-    <footer style="position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; text-align: center;">
-        <p>&copy; Candidate 2024</p>
-    </footer>
+    
 
 
 

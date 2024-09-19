@@ -76,6 +76,7 @@ def signup(request):
     
 
 # candidate dashboard
+@login_required
 def candidate_dashboard(request):
     """This method is responsible for rendering the candidate dashboard
     and displaying the candidate's CV.
@@ -142,7 +143,7 @@ def handle_work_experience_formset(cv, post_data=None):
         CV,
         WorkExperience,
         form=WorkExperienceForm,
-        fields=['position', 'company', 'start_date', 'end_date'],
+        fields=['position', 'company', 'start_date', 'end_date', 'description'],
         extra=1,
         can_delete=True
     )
@@ -239,6 +240,7 @@ def update_user_info(request, profile_form):
 
 # ==========edit CV==========
 
+@login_required
 def edit_cv(request): 
     """Handle the editing of the candidate's CV."""
     profile = get_object_or_404(CandidateProfile, user=request.user)
@@ -338,6 +340,8 @@ def edit_cv(request):
 
 
 # ================recruiter dashboard===============
+
+@login_required
 def recruiter_dashboard(request):
     """This method renders the recruiter dashboard with candidate cards."""
 
@@ -368,6 +372,7 @@ def recruiter_dashboard(request):
 
 
 # candidate cv view
+@login_required
 def candidate_cv(request, candidate_id):
     """This method displays the user's cv"""
 
@@ -403,6 +408,19 @@ def candidate_cv(request, candidate_id):
 
 
 # logout view
+@login_required
 def logout(request):
     auth.logout(request)
     return redirect('index')
+
+
+@login_required
+def delete_profile_view(request):
+    if request.method == 'POST':
+        user = request.user
+        # Delete the user profile
+        user.delete()
+        messages.success(request, 'Your account has been deleted successfully.')
+        return redirect('index')  # Redirect to the login page
+    # Handle GET requests (optional)
+    return redirect('profile')

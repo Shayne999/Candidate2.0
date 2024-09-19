@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -40,8 +42,10 @@
         <div class="card-container d-flex justify-content-center">
             <div class="card" style="width: 100%; max-width: 80%; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                 <div class="profile-image-container text-center mt-4">
-                    <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}"
-                         alt="Profile Picture" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
+                    <a href="{{ profile.profile_picture.url }}">
+                        <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/Blank profile picture.png' %}{% endif %}"
+                            alt="Profile Picture" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
+                    </a>
                     <h1 class="mt-3" style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px;">
                         {{ profile.user.first_name }} {{ profile.user.last_name }}'s CV
                     </h1>
@@ -58,8 +62,8 @@
                             {% if career_field %}
                                 <div class="section mb-4">
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Career Field</h2>
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ career_field.field }}</p>
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Experience: {{ career_field.experience_in_years }} years</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ career_field.field|check_field }}</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Experience: {{ career_field.experience_in_years|check_field }} years</p>
                                 </div>
                             {% else %}
                                 <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">No career field available.</p>
@@ -70,8 +74,8 @@
                             {% if contact_info %}
                                 <div class="section mb-4">
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Contact Information</h2>
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Phone: {{ contact_info.phone_number }}</p>
-                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Email: {{ contact_info.email }}</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Phone: {{ contact_info.phone_number|check_field }}</p>
+                                    <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">Email: {{ contact_info.email|check_field }}</p>
                                 </div>
                             {% else %}
                                 <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">No contact information available.</p>
@@ -84,7 +88,7 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Skills</h2>
                                     <ul style="list-style: none; padding-left: 0;">
                                         {% for skill in skills_list %}
-                                            <li style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ skill }}</li>
+                                            <li style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ skill|check_field }}</li>
 
                                             {% if not forloop.last %}
                                                 <hr>
@@ -101,9 +105,9 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Education</h2>
                                     {% for education in education_history %}
                                         <div>
-                                            <h4><strong style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 250;">{{ education.institution }}</strong></h4>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ education.qualification }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200; color: #3064a0">{{ education.start_date }} - {{ education.end_date }}</p>
+                                            <h4><strong style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 250;">{{ education.institution|check_field }}</strong></h4>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ education.qualification|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200; color: #3064a0">{{ education.start_date|check_field }} - {{ education.end_date|check_field }}</p>
 
                                             {% if not forloop.last %}
                                                 <hr>
@@ -122,7 +126,7 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Languages</h2>
                                     <ul style="list-style: none; padding-left: 0;">
                                         {% for language in languages_list %}
-                                            <li style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ language.language }}</li>
+                                            <li style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ language.language|check_field }}</li>
 
                                             {% if not forloop.last %}
                                                 <hr>
@@ -152,10 +156,10 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Work Experience</h2>
                                     {% for job in work_experiences %}
                                         <div class="work-experience">
-                                            <h3><strong style="font-family: DM Sans, sans-serif; font-size: 27px; font-weight: 250;">{{ job.position }}</strong></h3>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ job.company }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200; color: #3064a0">{{ job.start_date }} - {{ job.end_date }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ job.description }}</p>
+                                            <h3><strong style="font-family: DM Sans, sans-serif; font-size: 27px; font-weight: 250;">{{ job.position|check_field }}</strong></h3>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ job.company|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200; color: #3064a0">{{ job.start_date|check_field }} - {{ job.end_date|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 200;">{{ job.description|check_field }}</p>
 
                                             {% if not forloop.last %}
                                                 <hr>
@@ -174,9 +178,9 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">Projects</h2>
                                     {% for project in project_list %}
                                         <div class="project">
-                                            <h3 style="font-family: DM Sans, sans-serif; font-size: 25px; font-weight: 250;">{{ project.name }}</h3>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ project.description }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200;">{{ project.link }}</p>
+                                            <h3 style="font-family: DM Sans, sans-serif; font-size: 25px; font-weight: 250;">{{ project.name|check_field }}</h3>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ project.description|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 200;">{{ project.link|check_field }}</p>
 
                                             {% if not forloop.last %}
                                                 <hr>
@@ -195,10 +199,10 @@
                                     <h2 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 25px; color: hwb(212 7% 56%)">References</h2>
                                     {% for reference in reference_list %}
                                         <div class="reference">
-                                            <h3 style="font-family: DM Sans, sans-serif; font-size: 25px; font-weight: 250;">{{ reference.name }}</h3>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ reference.company }} - {{ reference.position }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 200;">{{ reference.email }}</p>
-                                            <p style="font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 200;">{{ reference.phone_number }}</p>
+                                            <h3 style="font-family: DM Sans, sans-serif; font-size: 25px; font-weight: 250;">{{ reference.name|check_field }}</h3>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 20px; font-weight: 150;">{{ reference.company|check_field }} - {{ reference.position|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 200;">{{ reference.email|check_field }}</p>
+                                            <p style="font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 200;">{{ reference.phone_number|check_field }}</p>
 
                                             {% if not forloop.last %}
                                                 <hr>
