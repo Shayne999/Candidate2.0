@@ -3,7 +3,7 @@ Author: Shayne Ndlovu
 Github: https://github.com/Shayne999
 Linkedin: https://www.linkedin.com/in/shayne-ndlovu-181a32302/
 
-Candidate is and online CV Platform. It is designed to help recruiters find their ideal candidates as quickly as possible.
+Candidate is an online CV Platform. It is designed to help recruiters find their ideal candidates as quickly as possible.
 
 How it works:
 At sign up there are two options, Candidate and Recruiter. The Candidate option allows you to create a candidate account in which you will be able to create your CV. Upon sign in you land on the user dashboard with the CV display and a navigation bar at the top. The navigation bar has three buttons, Delete Account, Logout and Edit CV. The Edit CV button, as the name suggests, takes the user to a page with the CV form where they can edit their CV
