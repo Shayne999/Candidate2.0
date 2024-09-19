@@ -14,3 +14,14 @@ The recruiter's dashboard has a search bar that takes in two search parameter, c
 Technologies used:
 The project was built using python's Django framework and all the dependencies are listed in the requirements.txt file. The search function was built using the django-filter package.
 The database is a PostgreSQL database.
+
+
+![Screenshot (29)](https://github.com/user-attachments/assets/8bb1abf7-bbbe-4b93-bbb6-96052ed2c01e)
+
+![Screenshot (25)](https://github.com/user-attachments/assets/28e1c595-7061-4e75-8e2d-88680b5bdefd)
+![Screenshot (27)](https://github.com/user-attachments/assets/41cd1d0a-e9d5-47d9-834d-e82961254aed)
+![Screenshot (28)](https://github.com/user-attachments/assets/781ca174-ab1b-42b9-bbf7-186f36382ae8)
+
+
+
+
