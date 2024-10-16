@@ -133,15 +133,53 @@
 
                 {{ work_experience_formset.management_form }}
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="work-experience-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Work Experience</h1>
             
                         {% for form in work_experience_formset %}
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p }}
+                            <div class="form-control experience-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                
+                                <p>{{ form.id }}</p>
+                                <p>Position{{ form.position }}</p>
+                                <p>Company{{ form.company }}</p>  
+                                <p>Start Date {{ form.start_date }}</p>
+                                <p>End Date {{ form.end_date }}</p>
+                                <p>Description {{ form.description }}</p>
+
+                                <div class="remove-work-experience" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if work_experience_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                             
                         {% endfor %}
+
+                        <!-- Add Form -->
+                        <div id="add-work-experience" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Work Experience</span>
+                        </div>
+
+  
+                    </div>
                 </div>
                 
 
@@ -152,14 +190,48 @@
                 {{ education_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="education-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Education</h1>
             
                         {% for form in education_formset %}
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p }}
+                            <div class="form-control education-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                
+                                <p>{{ form.id }}</p>
+                                <p>Institution{{ form.institution }}</p>
+                                <p>Qualification{{ form.qualification }}</p>
+                                <p>Start Date{{ form.start_date }}</p>
+                                <p>End Date{{ form.end_date }}</p>
+
+                                <div class="remove-education" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if education_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
+
+                        <!-- Add Form Icon -->
+                        <div id="add-education" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Education</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -170,15 +242,48 @@
                 {{ project_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="project-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Projects</h1>
-                        <div>
+
                             {% for form in project_formset %}
-                                <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                    {{ form.as_p }}
+                                <div class="form-control project-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                    
+                                    <p>{{ form.id }}</p>
+                                    <p>Name{{ form.name }}</p>
+                                    <p>Link{{ form.link }}</p>
+                                    <p>Description{{ form.description }}</p>
+
+                                    <div class="remove-project" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Hidden delete checkbox (separately rendered) -->
+                                    {% if project_formset.can_delete %}
+                                        <div style="display:none;">
+                                            {{ form.DELETE }}
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Display formset errors here -->
+                                    {% if form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            {{ form.non_field_errors }}
+                                        </div>
+                                    {% endif %}
+
                                 </div>
                             {% endfor %}
-                        </div>
+
+                            <!-- Add Form Icon -->
+                            <div id="add-project" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                                </svg>
+                                <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Project</span>
+                            </div>
+
                     </div>
                 </div>
                 
@@ -188,14 +293,46 @@
                 {{ skills_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="skills-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Skills</h1>
             
                         {% for form in skills_formset %}
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p}}
+                            <div class="form-control skills-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                <p>{{ form.id }}</p>
+                                <p>Skill{{ form.skill }}</p>
+
+                                <div class="remove-skill" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if skills_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
+
                             </div>
                         {% endfor %}
+
+                        <!-- Add Form -->
+                        <div id="add-skill" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Skill</span>
+                        </div>
+
                     </div>
                 </div>
                 
@@ -205,14 +342,45 @@
                 {{ language_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="languages-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Languages</h1>
             
                         {% for form in language_formset %} 
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p }}
+                            <div class="form-control language-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                <p>{{ form.id }}</p>
+                                <p>Language{{ form.language }}</p>
+
+                                <div class="remove-language" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if language_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
                             </div>
+
                         {% endfor %}
+
+                        <!-- Add Form -->
+                        <div id="add-language" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Language</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -223,14 +391,48 @@
                 {{ reference_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="references-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">References</h1>
             
                         {% for form in reference_formset %}
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p }}
+                            <div class="form-control reference-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                <p>{{ form.id }}</p>
+                                <p>Name{{ form.name }}</p>
+                                <p>Company{{ form.company }}</p>  
+                                <p>Position{{ form.position }}</p>
+                                <p>Email{{ form.email }}</p>
+                                <p>Phone Number{{ form.phone_number }}</p>
+
+                                <div class="remove-reference" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if reference_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
+
+                        <!-- Add Form -->
+                        <div id="add-reference" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Reference</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -241,21 +443,53 @@
                 {{ additional_info_formset.management_form }}
 
                 <div class="row g-3 align-items-center" style="margin-top: 40px;">
-                    <div class="form-control">
+                    <div class="form-control" id="additional-info-container">
                         <h1 style="font-family: Nunito, sans-serif; font-weight: 200; font-style: extralight; font-size: 35px; color: hwb(212 7% 56%);">Additional Information</h1>
             
                         {% for form in additional_info_formset %}
-                            <div class="form-control" style="margin-bottom: 20px; margin-bottom: 20px;">
-                                {{ form.as_p }}
+                            <div class="form-control additional-info-formset-row" style="margin-bottom: 20px; margin-bottom: 20px;">
+                                <p>{{ form.id }}</p>
+                                <p>Additional Information{{ form.additional_information }}</p>
+
+                                <div class="remove-additional-info" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(0 10% 0%);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </div>
+                                
+
+                                <!-- Hidden delete checkbox (separately rendered) -->
+                                {% if additional_info_formset.can_delete %}
+                                    <div style="display:none;">
+                                        {{ form.DELETE }}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Display formset errors here -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
+
                             </div>
                         {% endfor %}
+
+                        <!-- Add Form -->
+                        <div id="add-additional-info" style="cursor: pointer; display: inline-flex; align-items: center; color: hwb(119 14% 42%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                            </svg>
+                            <span style="margin-left: 8px; font-family: Nunito, sans-serif; font-size: 16px; color:black">Add Additional Information</Inp></span>
+                        </div>
                     </div>
                 </div>
                 
                 
 
-                
-                <button type="submit" class="btn btn-dark">Save</button>
+                <div class="d-grid gap-2" style="padding-top: 20px;">
+                    <button type="submit" class="btn btn-dark">Save</button>
+                </div>
                 
 
             </form>

@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-sbz3)3=wj_%*fcyj9ak98ncv^^mb@^@dz#7!o!&@qv_b_u-lm('
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,12 +78,12 @@ WSGI_APPLICATION = 'candidate.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': '********',
-        'NAME': '*******',
-        'USER': '******',
-        'PASSWORD': '*******',
-        'HOST': '******',
-        'PORT': '******',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'candidate_db_2',
+        'USER': 'postgres',
+        'PASSWORD': 'Iamjmagnus!',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

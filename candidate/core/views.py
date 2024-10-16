@@ -134,7 +134,8 @@ def handle_education_formset(cv, post_data=None):
         Education,
         form=EducationForm,
         fields=['institution', 'qualification', 'start_date', 'end_date'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -149,7 +150,8 @@ def handle_work_experience_formset(cv, post_data=None):
         WorkExperience,
         form=WorkExperienceForm,
         fields=['position', 'company', 'start_date', 'end_date', 'description'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
     
@@ -164,7 +166,8 @@ def handle_skill_formset(cv, post_data=None):
         Skills,
         form=SkillsForm,
         fields=['skill'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -179,7 +182,8 @@ def handle_language_formset(cv, post_data=None):
         Languages,
         form=LanguagesForm,
         fields=['language'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -194,7 +198,8 @@ def handle_reference_formset(cv, post_data=None):
         References,
         form=ReferencesForm,
         fields=['name', 'company', 'position', 'email', 'phone_number'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -209,7 +214,8 @@ def handle_additional_info_formset(cv, post_data=None):
         AdditionaleInformation,
         form=AdditionalInfoForm,
         fields=['additional_information'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -224,7 +230,8 @@ def handle_project_formset(cv, post_data=None):
         Projects,
         form=ProjectsForm,
         fields=['name', 'link', 'description'],
-        extra=1,
+        min_num=1,
+        extra=0,
         can_delete=True
     )
 
@@ -255,6 +262,7 @@ def edit_cv(request):
 
 
     if request.method == 'POST':
+        
         # Initialize forms with POST data
         cv_form = CVForm(request.POST, instance=cv)
         profile_form = CandidateProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
@@ -276,6 +284,7 @@ def edit_cv(request):
                 education_formset.is_valid(), work_experience_formset.is_valid(),skills_formset.is_valid(),
                 language_formset.is_valid(), reference_formset.is_valid(), additional_info_formset.is_valid(),
                 project_formset.is_valid(), career_field_form.is_valid()]):
+            
 
             # Save the forms and formsets
             cv_form.save()
@@ -297,12 +306,43 @@ def edit_cv(request):
         else:
 
             # Print individual form validation errors for debugging
-            # if not cv_form.is_valid():
-            #     print("CV Form errors:", cv_form.errors)
-            # if not profile_form.is_valid():
-            #     print("Profile Form errors:", profile_form.errors)
-            # if not contact_info_form.is_valid():
-            #     print("Contact Form errors:", contact_info_form.errors)
+            if not cv_form.is_valid():
+                print("CV Form errors:", cv_form.errors)
+            if not profile_form.is_valid():
+                print("Profile Form errors:", profile_form.errors)
+            if not contact_info_form.is_valid():
+                print("Contact Form errors:", contact_info_form.errors)
+
+            
+                    # Print formset errors
+            if not education_formset.is_valid():
+                print("Education Formset errors:")
+                for form in education_formset:
+                    print(form.errors)
+            if not work_experience_formset.is_valid():
+                print("Work Experience Formset errors:")
+                for form in work_experience_formset:
+                    print(form.errors)
+            if not skills_formset.is_valid():
+                print("Skills Formset errors:")
+                for form in skills_formset:
+                    print(form.errors)
+            if not language_formset.is_valid():
+                print("Language Formset errors:")
+                for form in language_formset:
+                    print(form.errors)
+            if not reference_formset.is_valid():
+                print("Reference Formset errors:")
+                for form in reference_formset:
+                    print(form.errors)
+            if not additional_info_formset.is_valid():
+                print("Additional Info Formset errors:")
+                for form in additional_info_formset:
+                    print(form.errors)
+            if not project_formset.is_valid():
+                print("Project Formset errors:")
+                for form in project_formset:
+                    print(form.errors)
 
             messages.error(request, 'Please correct the errors below.')
             return redirect('edit_cv')
